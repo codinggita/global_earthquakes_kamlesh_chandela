@@ -592,3 +592,69 @@ Core business logic:
 - Analytical: `getHighMagnitude`, `getDeepEarthquakes`, `getShallowEarthquakes`, `getRecentEarthquakes`, `getCriticalEarthquakes`
 
 #### `src/services/analytics.service.js`
+Aggregation pipeline definitions:
+- `getHighestMagnitude` — single doc sorted by mag DESC
+- `getDeepestEarthquakes` — N docs sorted by depth DESC
+- `getRecentActivity` — daily group for last N days
+- `getLocationAnalysis` — 10° grid cell grouping
+- `getCountryAnalysis` — country group with avg/max/extras
+- `getMagnitudeAnalysis` — $bucket on mag
+- `getDepthAnalysis` — $bucket on depth
+- `getMonthlyAnalysis` — group by month for a year
+- `getNetworkAnalysis` — group by net with conditional counts
+
+#### `src/services/auth.service.js`
+Authentication utilities:
+- `generatePasswordResetToken` — crypto randomBytes
+- `sanitizeUser` — strip sensitive fields
+
+#### `src/routes/v1/earthquake.routes.js`
+Route wiring for 22+ earthquake endpoints with middleware chaining.
+
+#### `src/routes/v1/auth.routes.js`
+Route wiring for 8 authentication endpoints.
+
+#### `src/routes/v1/analytics.routes.js`
+Route wiring for 9 analytics endpoints.
+
+#### `src/routes/v1/stats.routes.js`
+Route wiring for 10 statistics endpoints.
+
+#### `src/routes/v1/search.routes.js`
+Single search endpoint with text query support.
+
+#### `src/routes/v1/admin.routes.js`
+Admin-only routes with protect + restrictTo('admin').
+
+#### `src/routes/index.js`
+Aggregates all v1 routes under `/api/v1`.
+
+#### `src/middlewares/auth.middleware.js`
+Two middleware functions:
+- `protect` — verifies JWT, attaches `req.user`, checks `isActive`
+- `restrictTo` — checks role against allowed roles array
+
+#### `src/middlewares/error.middleware.js`
+Global error handler handling:
+- CastError (invalid ObjectId)
+- Duplicate key (11000)
+- ValidationError
+- Dev vs Prod error formatting
+
+#### `src/middlewares/validation.middleware.js`
+Joi validation middleware for:
+- Earthquake creation
+- User registration
+- User login
+
+#### `src/middlewares/logger.middleware.js`
+Custom request logger capturing method, URL, status, duration, and IP.
+
+#### `src/middlewares/rateLimit.middleware.js`
+Three rate limiter configurations:
+- apiLimiter: 100 req / 15 min
+- authLimiter: 5 req / 1 hour (skips successful)
+- strictLimiter: 20 req / 1 hour
+
+#### `src/middlewares/upload.middleware.js`
+Multer configuration for JSON file uploads.
