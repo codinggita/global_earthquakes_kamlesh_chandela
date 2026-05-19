@@ -7,12 +7,14 @@ const { logAction } = require('../utils/auditLogger');
 exports.getAllEarthquakes = catchAsync(async (req, res, next) => {
   const {
     page = 1, limit = 10, sort = '-time', country, magType, status,
-    minMagnitude, maxMagnitude, minDepth, maxDepth, net, year, month,
-    place, minGap, depthCategory, magnitudeCategory
+    minMagnitude, maxMagnitude, minDepth, maxDepth, net, network, year, month,
+    place, minGap, depthCategory, magnitudeCategory, minRms
   } = req.query;
 
-  // Final sort normalization — if someone passes an empty sort, force latest first
-  const sortOrder = (sort && sort !== '') ? sort : '-time';
+  // Sort field mapping — allow human-friendly names like 'magnitude' alongside DB field 'mag'
+  const sortFieldMap = { magnitude: 'mag', '-magnitude': '-mag', time: 'time', '-time': '-time' };
+  const rawSort = (sort && sort !== '') ? sort : '-time';
+  const sortOrder = sortFieldMap[rawSort] || rawSort;
 
   const filter = { isDeleted: { $ne: true } };
   if (country && country.trim()) filter.country = { $regex: country.trim(), $options: 'i' };
@@ -28,11 +30,13 @@ exports.getAllEarthquakes = catchAsync(async (req, res, next) => {
     if (minDepth) filter.depth.$gte = parseFloat(minDepth);
     if (maxDepth) filter.depth.$lte = parseFloat(maxDepth);
   }
-  if (net && net.trim()) filter.net = net.trim();
+  const netValue = net || network; // Support both ?net=us and ?network=us
+  if (netValue && netValue.trim()) filter.net = netValue.trim();
   if (year) filter.year = parseInt(year);
   if (month) filter.month = parseInt(month);
   if (place && place.trim()) filter.place = { $regex: place.trim(), $options: 'i' };
   if (minGap) filter.gap = { $gte: parseFloat(minGap) };
+  if (minRms) filter.rms = { $gte: parseFloat(minRms) };
   if (depthCategory) filter.depthCategory = depthCategory;
   if (magnitudeCategory) filter.magnitudeCategory = magnitudeCategory;
 
