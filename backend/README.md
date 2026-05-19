@@ -460,3 +460,69 @@ backend/
 │   │
 │   ├── services/                        # Business logic layer (thick)
 │   │   ├── earthquake.service.js        # CRUD, pagination, bulk, specialized queries
+│   │   ├── analytics.service.js         # 8+ aggregation pipelines
+│   │   ├── auth.service.js              # Token generation, sanitization
+
+│   │
+│   ├── routes/                          # Route definitions (versioned)
+│   │   ├── v1/                          # API version 1
+│   │   │   ├── earthquake.routes.js     # CRUD + 11 info routes
+│   │   │   ├── auth.routes.js           # 8 auth endpoints
+│   │   │   ├── analytics.routes.js      # 9 analytics endpoints
+│   │   │   ├── stats.routes.js          # 10 statistics endpoints
+│   │   │   ├── search.routes.js         # Full-text search
+│   │   │   └── admin.routes.js          # Admin management
+│   │   └── index.js                     # Route aggregator
+│   │
+│   ├── middlewares/                     # Express middleware pipeline
+│   │   ├── auth.middleware.js           # JWT verify + role restrict
+│   │   ├── error.middleware.js          # Global error handler
+│   │   ├── validation.middleware.js     # Joi request validation
+│   │   ├── logger.middleware.js         # Request logging
+│   │   ├── rateLimit.middleware.js      # Rate limiting
+
+│   │   └── upload.middleware.js         # File upload handling
+│   │
+│   ├── utils/                           # Shared utilities
+│   │   ├── AppError.js                  # Custom error class
+│   │   ├── catchAsync.js                # Async wrapper
+│   │   ├── filterBuilder.js             # Fluent filter builder
+│   │   ├── pagination.util.js           # Pagination calculator
+│   │   ├── validators.js                # Domain validators
+│   │   ├── email.service.js             # Email abstraction
+│   │   └── logger.js                    # Winston logger
+│   │
+│   ├── validations/                     # Joi validation schemas
+│   │   ├── earthquake.validation.js     # Earthquake schemas
+│   │   ├── auth.validation.js           # Auth schemas
+│   │   └── user.validation.js           # User schemas
+│   │
+│   ├── scripts/                         # CLI automation
+│   │   ├── seedDatabase.js              # Database seeding
+│   │   └── backupData.js                # Data export
+│   │
+│   └── app.js                           # Express app factory
+│
+├── .env                                 # Local env vars (gitignored)
+├── .env.example                         # Env template
+├── .gitignore                           # Git exclusion rules
+├── package.json                         # Dependencies + scripts
+├── README.md                            # This file
+└── server.js                            # Entry point
+```
+
+### Folder & File Explanations
+
+#### `src/config/db.config.js`
+Establishes MongoDB connection via Mongoose with event handlers for `error`, `disconnected`, and graceful `SIGINT` shutdown.
+
+```javascript
+// Connection with retry timeout + socket config
+mongoose.connect(MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+});
+```
+
+#### `src/config/rateLimit.config.js`
+Centralized rate limit constants (window, max) for api, auth, and strict limiters.
