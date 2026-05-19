@@ -526,3 +526,69 @@ mongoose.connect(MONGODB_URI, {
 
 #### `src/config/rateLimit.config.js`
 Centralized rate limit constants (window, max) for api, auth, and strict limiters.
+
+#### `src/models/Earthquake.model.js`
+Core schema with:
+- 30+ fields with validation (required, min, max, enum)
+- 8 compound and single-field indexes
+- Pre-save hooks for derived fields (country extraction, depth/magnitude categorization)
+- Virtual property (`coordinates`)
+- Static helper methods (`getHighMagnitude`, `getRecent`)
+
+#### `src/models/User.model.js`
+User schema with:
+- Email validation regex
+- bcrypt pre-save hashing (12 rounds)
+- `comparePassword` instance method
+- Role enum (user, moderator, admin)
+- Soft-delete via `isActive`
+
+#### `src/models/AuditLog.model.js`
+Audit trail schema tracking user actions with:
+- Action enum (CREATE, UPDATE, DELETE, READ, LOGIN, LOGOUT, EXPORT)
+- Resource type and ID reference
+- IP address and user agent capture
+- Compound indexes on `userId + timestamp`
+
+#### `src/controllers/earthquake.controller.js`
+Thin request handler with:
+- 20+ exported functions
+- Query parameter extraction and filtering
+- Service delegation
+- Consistent JSON response formatting
+- Error delegation via `catchAsync`
+
+#### `src/controllers/auth.controller.js`
+Authentication handler with:
+- Register (create user + return token)
+- Login (verify credentials + update lastLogin)
+- Profile management (get, update)
+- Password management (change, forgot, reset)
+
+#### `src/controllers/analytics.controller.js`
+Analytics endpoint handler:
+- 9 aggregation-based endpoints
+- Delegates to `AnalyticsService` for pipeline execution
+
+#### `src/controllers/stats.controller.js`
+Statistics endpoint handler:
+- 10 statistical endpoints
+- MongoDB aggregation + countDocuments queries
+
+#### `src/controllers/admin.controller.js`
+Admin management handler:
+- User listing with pagination and role/status filtering
+- User update (name, role, isActive, preferences)
+- User deletion
+- Audit log queries with action/resource filtering
+
+#### `src/services/earthquake.service.js`
+Core business logic:
+- `getAllEarthquakes` — dynamic filter + sort + paginate
+- `getEarthquakeById` — find by MongoDB ID
+- `createEarthquake`, `updateEarthquake`, `deleteEarthquake`
+- `bulkCreate`, `bulkUpdate`, `bulkDelete`
+- Specialized: `getByPlace`, `getByCountry`, `getByType`, `getByStatus`, `getByMagType`, `getByNetwork`
+- Analytical: `getHighMagnitude`, `getDeepEarthquakes`, `getShallowEarthquakes`, `getRecentEarthquakes`, `getCriticalEarthquakes`
+
+#### `src/services/analytics.service.js`
