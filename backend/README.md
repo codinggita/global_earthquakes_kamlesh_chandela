@@ -130,3 +130,69 @@ Seismic data from global networks (USGS, EMSC, GEOFON) is vast, complex, and sca
 | Challenge | Impact |
 |:----------|:-------|
 | ❌ **Data Scattered** | Earthquake data exists in raw JSON files, CSV exports, and USGS feeds — no unified query interface |
+| ❌ **No Standard API** | Each dataset requires custom parsing — no RESTful access pattern |
+| ❌ **Slow Queries** | Naive search over 40K+ records is slow without indexing and aggregation |
+| ❌ **No Auth System** | Sensitive data and admin operations are unprotected |
+| ❌ **No Analytics** | Trend analysis, magnitude distribution, depth analysis require external tools |
+| ❌ **No Pagination** | Loading all records at once causes browser crashes and slow responses |
+
+**Earthquake Analytics API** solves all of these by providing a unified, secure, high-performance RESTful interface backed by MongoDB's powerful aggregation engine.
+
+---
+
+## 📊 Dataset Understanding
+
+### Raw JSON Structure
+
+The dataset contains **40,000+ earthquake records** from USGS with the following raw structure:
+
+```json
+{
+  "id": "us1000example",
+  "time": "2024-01-15T10:30:00.000Z",
+  "updated": "2024-01-15T11:00:00.000Z",
+  "place": "10km SE of Tokyo, Japan",
+  "type": "earthquake",
+  "latitude": 35.6762,
+  "longitude": 139.6503,
+  "depth": 50,
+  "mag": 5.2,
+  "magType": "mb",
+  "magError": 0.1,
+  "magNst": 45,
+  "horizontalError": 5.2,
+  "depthError": 2.1,
+  "nst": "120",
+  "gap": 45,
+  "dmin": 1.5,
+  "rms": 0.8,
+  "net": "US",
+  "locationSource": "US",
+  "magSource": "US",
+  "status": "reviewed"
+}
+```
+
+### MongoDB Conversion Process
+
+```
+RAW JSON (40K+ records)
+    │
+    ▼
+Mongoose Schema with:
+    │  ├── Field validation (required, min/max, enum)
+    │  ├── Type casting (String, Number, Date)
+    │  ├── Default values
+    │  ├── Pre-save hooks (derived fields)
+    │  └── Virtual properties (coordinates)
+    │
+    ▼
+Seeding Script (npm run seed)
+    │  ├── Connect to MongoDB
+    │  ├── Clear existing data
+    │  ├── Read JSON file
+    │  ├── InsertMany with ordered: false
+    │  └── Create admin user
+    │
+    ▼
+Indexed + Queryable MongoDB Collection
