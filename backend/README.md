@@ -394,3 +394,69 @@ backend/
 ├── src/utils/       ← Shared utilities
 ├── src/validations/ ← Joi schemas
 └── src/scripts/     ← Automation
+```
+
+---
+
+## 🏗 MVC Architecture
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   MODEL     │────▶│   VIEW      │────▶│ CONTROLLER  │
+│ (Mongoose)  │     │ (JSON Res)  │     │  (Handler)  │
+└──────┬──────┘     └─────────────┘     └──────┬──────┘
+       │                                       │
+       │                                       │
+       ▼                                       ▼
+┌──────────────────────────────────────────────────┐
+│                   SERVICE LAYER                   │
+│          (Business Logic & Data Ops)              │
+└──────────────────────────────────────────────────┘
+```
+
+### How MVC is Implemented Here
+
+| Layer | Files | Responsibility |
+|:------|:------|:---------------|
+| **Model** | `models/*.js` | Mongoose schemas, validation, indexes, hooks |
+| **View** | Controller responses | JSON serialization (no template engine) |
+| **Controller** | `controllers/*.js` | Parse request, call service, send response |
+| **Service** | `services/*.js` | Business logic, aggregation, data transformation |
+| **Routes** | `routes/*.js` | URL mapping, middleware wiring |
+| **Middleware** | `middlewares/*.js` | Auth, validation, logging, rate limiting |
+
+### Request Flow Through MVC
+
+```
+Client → Route → Middleware → Controller → Service → Model → MongoDB
+                                            │
+                                            ▼
+Client ← JSON ← Controller ← Service ← Model
+```
+
+---
+
+## 📁 Folder Structure
+
+```
+backend/
+│
+├── src/
+│   ├── config/                          # Application configuration
+│   │   ├── db.config.js                 # MongoDB connection with event handlers
+│   │   └── rateLimit.config.js          # Rate limit window/max defaults
+│   │
+│   ├── models/                          # Mongoose data models
+│   │   ├── Earthquake.model.js          # Earthquake schema + indexes + hooks
+│   │   ├── User.model.js                # User schema + bcrypt hashing
+│   │   └── AuditLog.model.js            # Audit trail schema
+│   │
+│   ├── controllers/                     # Request handlers (thin)
+│   │   ├── earthquake.controller.js     # 20+ earthquake endpoints
+│   │   ├── auth.controller.js           # Register, login, profile, passwords
+│   │   ├── analytics.controller.js      # Aggregation analytics endpoints
+│   │   ├── stats.controller.js          # Statistical summary endpoints
+│   │   └── admin.controller.js          # User management + audit logs
+│   │
+│   ├── services/                        # Business logic layer (thick)
+│   │   ├── earthquake.service.js        # CRUD, pagination, bulk, specialized queries
