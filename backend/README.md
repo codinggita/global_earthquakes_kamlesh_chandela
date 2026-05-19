@@ -262,3 +262,69 @@ Indexed + Queryable MongoDB Collection
 |:--------|:---------|:-------|
 | Magnitude Distribution | `$bucket` on `mag` | Count per magnitude range |
 | Depth Distribution | `$bucket` on `depth` | Count per depth range |
+| Country Analysis | `$group` by `country` | Count + avg/max mag per country |
+| Monthly Trends | `$match` year + `$group` by month | Monthly counts and averages |
+| Network Analysis | `$group` by `net` | Network counts + reviewed stats |
+| Location Heatmap | `$group` by 10° grid cell | Geospatial density data |
+
+---
+
+## 🏭 Industry Features
+
+| Feature | Category | Enterprise Benefit |
+|:--------|:---------|:-------------------|
+| API Versioning (v1) | Design | Non-breaking API evolution |
+| Consistent Error Responses | Reliability | Predictable client error handling |
+| HTTP Status Codes | Standards | Industry-compliant semantics |
+| Environment-Based Config | DevOps | Secure credential management |
+| `.env.example` Template | DevOps | Easy onboarding for new devs |
+| Graceful Shutdown | Reliability | Zero data loss on restart |
+| Connection Pooling | Performance | Efficient MongoDB connections |
+| Pre-save Hooks | Data Integrity | Automatic derived field computation |
+| Compound Indexes | Performance | Sub-millisecond queries at scale |
+| `catchAsync` Wrapper | Code Quality | No try/catch duplication |
+| Custom `AppError` Class | Maintainability | Consistent operational errors |
+| Service Layer | Architecture | Business logic reusable outside HTTP |
+| Audit Logging | Compliance | Track all admin operations |
+
+---
+
+## 🛠 Tech Stack
+
+<div align="center">
+
+| Layer | Technology | Version | Purpose |
+|:------|:-----------|:--------|:--------|
+| ⚡ **Runtime** | Node.js | 18.x LTS | JavaScript runtime environment |
+| 🌐 **Framework** | Express.js | ^4.18.2 | HTTP server & routing |
+| 🗄 **Database** | MongoDB | 7.0 | Document-based NoSQL database |
+| 📦 **ODM** | Mongoose | ^7.5.0 | Schema modeling & data validation |
+| 🔑 **Auth** | jsonwebtoken | ^9.0.2 | Stateless JWT authentication |
+| 🔒 **Password** | bcryptjs | ^2.4.3 | Password hashing (12 rounds) |
+| 🛡 **Security** | helmet | ^7.0.0 | HTTP header security |
+| 🌍 **CORS** | cors | ^2.8.5 | Cross-origin resource sharing |
+| ⏱ **Rate Limit** | express-rate-limit | ^6.10.0 | API request throttling |
+| ✅ **Validation** | Joi | ^17.10.1 | Schema-based request validation |
+| 📝 **Logging** | winston | ^3.10.0 | Production-grade logging |
+| ⚙️ **Config** | dotenv | ^16.3.1 | Environment variable management |
+| 📁 **Upload** | multer | ^1.4.5 | File upload handling |
+
+---
+
+</div>
+
+---
+
+## 🏗 System Architecture
+
+```
+┌───────────────────────────────────────────────────────┐
+│                    CLIENT LAYER                        │
+│              (React App / Postman / cURL)              │
+└──────────────────────┬────────────────────────────────┘
+                       │ HTTPS Request
+                       ▼
+┌───────────────────────────────────────────────────────┐
+│                  EXPRESS ROUTER                        │
+│     ┌─────────────────────────────────────────────┐   │
+│     │           MIDDLEWARE PIPELINE                │   │
