@@ -328,3 +328,69 @@ Indexed + Queryable MongoDB Collection
 │                  EXPRESS ROUTER                        │
 │     ┌─────────────────────────────────────────────┐   │
 │     │           MIDDLEWARE PIPELINE                │   │
+│     │  helmet → cors → json() → rateLimiter       │   │
+│     │  → auth → validate → loggerMiddleware        │   │
+│     └─────────────────────────────────────────────┘   │
+└──────────────────────┬────────────────────────────────┘
+                       │ Route Match
+                       ▼
+┌───────────────────────────────────────────────────────┐
+│                 CONTROLLER LAYER                       │
+│  ┌──────────┐ ┌──────┐ ┌──────────┐ ┌───────┐       │
+│  │Earthquake│ │ Auth │ │Analytics │ │ Stats │       │
+│  │Controller│ │ Ctrl │ │Controller│ │ Ctrl  │       │
+│  └────┬─────┘ └──┬───┘ └────┬─────┘ └───┬───┘       │
+└───────┼──────────┼──────────┼────────────┼───────────┘
+        ▼          ▼          ▼            ▼
+┌───────────────────────────────────────────────────────┐
+│                  SERVICE LAYER                         │
+│  ┌──────────────┐ ┌────────────┐ ┌────────────────┐  │
+│  │ Earthquake   │ │ Analytics  │ │    Auth        │  │
+│  │   Service    │ │  Service   │ │   Service      │  │
+│  └──────┬───────┘ └─────┬──────┘ └──────┬─────────┘  │
+└─────────┼───────────────┼───────────────┼─────────────┘
+          ▼               ▼               ▼
+┌───────────────────────────────────────────────────────┐
+│                  DATA ACCESS LAYER                     │
+│  ┌──────────────────────────────────────────────────┐ │
+│  │              Mongoose ODM                         │ │
+│  │  ┌──────────┐ ┌──────┐ ┌──────────────┐        │ │
+│  │  │Earthquake│ │ User │ │ AuditLog     │        │ │
+│  │  │  Model   │ │Model │ │   Model      │        │ │
+│  │  └──────────┘ └──────┘ └──────────────┘        │ │
+│  └──────────────────────────────────────────────────┘ │
+└───────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🏛 Monolithic Architecture
+
+This project follows a **Monolithic MVC Architecture** — a single deployable unit where all components (routing, business logic, data access) live in one codebase.
+
+### Why Monolithic?
+
+| Benefit | Description |
+|:--------|:------------|
+| 🚀 **Simpler Deployment** | One server, one process, one deployment |
+| 🧪 **Easier Testing** | All components testable in-process |
+| 🔍 **Simpler Debugging** | Single request flow to trace |
+| 📦 **Less Overhead** | No network calls between services |
+| 👶 **Beginner Friendly** | Clear separation of concerns without microservice complexity |
+| ⚡ **Lower Latency** | In-process function calls vs inter-service HTTP |
+
+### Monolithic Structure
+
+```
+backend/
+├── server.js        ← Entry point (starts HTTP server)
+├── src/app.js       ← Express app (middleware + routes)
+├── src/config/      ← Configuration
+├── src/models/      ← Mongoose schemas
+├── src/controllers/ ← Request handlers
+├── src/services/    ← Business logic
+├── src/routes/      ← Route definitions
+├── src/middlewares/  ← Middleware functions
+├── src/utils/       ← Shared utilities
+├── src/validations/ ← Joi schemas
+└── src/scripts/     ← Automation
