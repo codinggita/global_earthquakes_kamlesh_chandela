@@ -196,3 +196,69 @@ Seeding Script (npm run seed)
     │
     ▼
 Indexed + Queryable MongoDB Collection
+```
+
+### Schema Planning Decisions
+
+| Raw Field | Mongoose Type | Validation | Derived Field |
+|:----------|:-------------|:-----------|:--------------|
+| `id` | String (unique) | Required | — |
+| `time` | Date | Required | `year`, `month`, `day`, `hour` |
+| `place` | String | Required | `country` (extracted) |
+| `latitude` | Number (-90 to 90) | Required | — |
+| `longitude` | Number (-180 to 180) | Required | `coordinates` (virtual) |
+| `depth` | Number (0-1000) | Required | `depthCategory` |
+| `mag` | Number (0-10) | Required | `magnitudeCategory` |
+
+---
+
+## 🚩 Project Goals
+
+| Goal | Description |
+|:-----|:------------|
+| 🎯 **Complete RESTful API** | Full CRUD operations with standardized JSON responses |
+| 🔐 **Secure Authentication** | JWT-based auth with bcrypt password hashing |
+| 👥 **Role-Based Access** | Granular permissions: user, moderator, admin |
+| 📊 **Powerful Analytics** | Aggregation pipelines for real-time seismic insights |
+| 🔍 **Advanced Querying** | Filter, sort, paginate, search across 40K+ records |
+| 🛡 **Enterprise Security** | Helmet, CORS, rate limiting, input validation |
+| 📝 **Comprehensive Logging** | Request logging, error tracking, audit trails |
+| 🧪 **Testable & Extensible** | Clean MVC architecture, easy to extend and test |
+
+---
+
+## ✨ Features
+
+### Core Features
+
+- [x] **RESTful API Design** — Standard HTTP methods + JSON responses
+- [x] **CRUD Operations** — Create, Read, Update, Delete earthquake records
+- [x] **Bulk Operations** — Create, update, delete multiple records at once
+- [x] **JWT Authentication** — Secure token-based authentication
+- [x] **bcrypt Password Hashing** — Industry-standard password security
+- [x] **Role-Based Access Control** — User, Moderator, Admin roles
+- [x] **Protected Routes** — Auth-protected endpoints with role checks
+- [x] **Advanced Filtering** — 15+ filter parameters on GET endpoints
+- [x] **Multi-Field Sorting** — Sort by magnitude, depth, time, place
+- [x] **Server-Side Pagination** — Skip/limit with total count + metadata
+- [x] **Full-Text Search** — Search across place, country, network, type
+- [x] **MongoDB Aggregation** — Server-side analytics pipelines
+- [x] **Statistical Summaries** — Count, averages, distributions
+- [x] **Request Validation** — Joi schema validation on all inputs
+- [x] **Centralized Error Handling** — Consistent error response format
+- [x] **Rate Limiting** — 3-tier rate limiting (api, auth, strict)
+- [x] **HTTP Security** — Helmet middleware for secure headers
+- [x] **CORS Configuration** — Whitelist-based cross-origin access
+- [x] **Request Logging** — Winston logging with custom middleware
+- [x] **Health Check** — `/health` endpoint for monitoring
+- [x] **API Versioning** — `/api/v1/` prefix for future compatibility
+- [x] **Database Seeding** — `npm run seed` for quick setup
+- [x] **Backup Script** — `npm run backup` for data export
+- [x] **Soft Delete Ready** — `isActive` field on users, status on earthquakes
+
+### Analytics Features
+
+| Feature | Pipeline | Output |
+|:--------|:---------|:-------|
+| Magnitude Distribution | `$bucket` on `mag` | Count per magnitude range |
+| Depth Distribution | `$bucket` on `depth` | Count per depth range |
