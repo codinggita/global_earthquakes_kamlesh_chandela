@@ -21,17 +21,17 @@ router.options('/login', (req, res) => {
   res.status(200).send();
 });
 
-// JWT Practice Routes
-router.get('/jwt/profile', protect, authController.getProfile);
-router.get('/jwt/dashboard', protect, (req, res) => res.status(200).json({ success: true, message: 'JWT Dashboard Access' }));
-router.post('/jwt/generate-token', authController.login);
-router.post('/jwt/verify-token', authController.verifyToken);
-router.post('/jwt/refresh-token', protect, authController.refreshToken);
-router.delete('/jwt/revoke-token', protect, authController.revokeToken);
-router.get('/jwt/private-earthquakes', protect, (req, res) => res.redirect('/api/v1/earthquakes'));
-router.get('/jwt/private-analytics', protect, authController.getPrivateAnalytics);
+// JWT Practice Routes — mounted at /jwt in index.js, so no /jwt prefix here
+router.get('/profile', protect, authController.getProfile);
+router.get('/dashboard', protect, (req, res) => res.status(200).json({ success: true, message: 'JWT Dashboard Access' }));
+router.post('/generate-token', authController.login);
+router.post('/verify-token', authController.verifyToken);
+router.post('/refresh-token', protect, authController.refreshToken);
+router.delete('/revoke-token', protect, authController.revokeToken);
+router.get('/private-earthquakes', protect, (req, res) => res.redirect('/api/v1/earthquakes'));
+router.get('/private-analytics', protect, authController.getPrivateAnalytics);
 
-router.options('/jwt/profile', (req, res) => {
+router.options('/profile', (req, res) => {
   res.header('Allow', 'GET, OPTIONS');
   res.status(200).send();
 });
