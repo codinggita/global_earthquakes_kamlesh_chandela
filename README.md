@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # 🌍 Global Earthquakes — Analytics Platform
 
