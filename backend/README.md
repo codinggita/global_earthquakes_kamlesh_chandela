@@ -2795,6 +2795,11 @@ curl -X OPTIONS http://localhost:5000/api/v1/earthquakes -v
 
 ## 📮 Postman Testing Guide
 
+> [!TIP]
+> **Interactive public documentation available** — explore all 50+ endpoints live with full request/response examples.
+>
+> [![Postman](https://img.shields.io/badge/%F0%9F%9A%80%20Open%20Postman%20Documentation-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/50839341/2sBXwmQseq)
+
 ### Setup
 
 ```bash
