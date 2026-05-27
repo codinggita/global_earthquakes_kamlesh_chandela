@@ -844,6 +844,13 @@ GET /health
 # Response: {"status":"OK","timestamp":"2026-05-13T10:00:00.000Z"}
 ```
 
+### 📬 Postman Documentation
+
+> [!TIP]
+> **Try the API live** — browse all 50+ endpoints with request/response examples directly in your browser.
+>
+> [![Postman](https://img.shields.io/badge/%F0%9F%9A%80%20Open%20API%20Documentation-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/50839341/2sBXwmQseq)
+
 ---
 
 ## 🔍 Features Deep Dive
