@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Button, Paper, Typography, Divider } from '@mui/material';
+import { Box, Grid, Button, Typography, Divider } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import SettingsIcon from '@mui/icons-material/Settings';
 import Input from '../common/Input';
 import Select from '../common/Select';
 
@@ -8,6 +11,9 @@ const STATUS_OPTIONS = ['reviewed', 'automatic', 'deleted'].map(v => ({ value: v
 const TYPE_OPTIONS = ['earthquake', 'quarry', 'explosion', 'landslide', 'icequake', 'other'].map(v => ({ value: v, label: v }));
 
 const EarthquakeForm = ({ initialData, onSubmit, loading }) => {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   const [formData, setFormData] = useState({
     time: '', place: '', country: '',
     latitude: '', longitude: '', depth: '', mag: '',
@@ -81,19 +87,61 @@ const EarthquakeForm = ({ initialData, onSubmit, loading }) => {
   };
 
   return (
-    <Paper sx={{ p: 4, borderRadius: 3 }}>
-      <Typography variant="h6" fontWeight="700" gutterBottom>
-        {initialData ? 'Edit Earthquake' : 'Add New Earthquake'}
+    <Box
+      sx={{
+        p: 4,
+        borderRadius: '20px',
+        background: isDark ? 'rgba(10,16,30,0.7)' : 'rgba(255,255,255,0.7)',
+        border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(148,163,184,0.12)',
+        backdropFilter: 'blur(16px)',
+        boxShadow: isDark ? '0 10px 40px rgba(0,0,0,0.3)' : '0 10px 40px rgba(0,0,0,0.04)',
+        // Override child inputs for premium unified look
+        '& .MuiOutlinedInput-root': {
+          borderRadius: '11px',
+          fontSize: '0.88rem',
+          background: isDark ? 'rgba(255,255,255,0.015)' : 'rgba(0,0,0,0.01)',
+          transition: 'all 0.2s ease',
+          '& fieldset': {
+            borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.12)',
+          },
+          '&:hover fieldset': {
+            borderColor: isDark ? 'rgba(255,255,255,0.16)' : 'rgba(0,0,0,0.22)',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: '#ef4444',
+            borderWidth: '1.5px',
+          },
+        },
+        '& .MuiInputLabel-root': {
+          fontSize: '0.88rem',
+          '&.Mui-focused': {
+            color: '#ef4444',
+          }
+        }
+      }}
+    >
+      <Typography variant="h6" sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, color: 'text.primary', mb: 1, letterSpacing: '-0.02em' }}>
+        {initialData ? 'Edit Earthquake Event' : 'Record New Seismic Event'}
       </Typography>
-      <Divider sx={{ mb: 3 }} />
+      <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 500, mb: 3.5 }}>
+        Enter official USGS parameters to register or update the seismic event
+      </Typography>
+      
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2.5}>
 
           {/* Required Fields Section */}
-          <Grid item xs={12}><Typography variant="subtitle2" color="primary" fontWeight="600">📍 Required Information</Typography></Grid>
+          <Grid item xs={12}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+              <LocationOnIcon color="primary" sx={{ fontSize: 18 }} />
+              <Typography variant="subtitle2" color="primary" fontWeight="700" sx={{ letterSpacing: '0.02em' }}>
+                Required Parameters
+              </Typography>
+            </Box>
+          </Grid>
 
           <Grid item xs={12} sm={4}>
-            <Input label="Date & Time *" name="time" type="datetime-local" value={formData.time} onChange={handleChange} required />
+            <Input label="Date & Time *" name="time" type="datetime-local" value={formData.time} onChange={handleChange} required InputLabelProps={{ shrink: true }} />
           </Grid>
           <Grid item xs={12} sm={5}>
             <Input label="Place / Location *" name="place" value={formData.place} onChange={handleChange} required helperText="Format: 'City, Country' — country auto-detected from comma" />
@@ -123,7 +171,14 @@ const EarthquakeForm = ({ initialData, onSubmit, loading }) => {
           </Grid>
 
           {/* Optional Fields Section */}
-          <Grid item xs={12} sx={{ mt: 1 }}><Typography variant="subtitle2" color="text.secondary" fontWeight="600">⚙️ Optional Details</Typography></Grid>
+          <Grid item xs={12} sx={{ mt: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+              <SettingsIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
+              <Typography variant="subtitle2" color="text.secondary" fontWeight="700" sx={{ letterSpacing: '0.02em' }}>
+                Optional Technical Metadata
+              </Typography>
+            </Box>
+          </Grid>
 
           <Grid item xs={12} sm={4}>
             <Input label="Network (net)" name="net" value={formData.net} onChange={handleChange} />
@@ -160,15 +215,44 @@ const EarthquakeForm = ({ initialData, onSubmit, loading }) => {
           </Grid>
 
           <Grid item xs={12}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-              <Button type="submit" variant="contained" size="large" disabled={loading} sx={{ px: 5, borderRadius: 2 }}>
-                {loading ? 'Saving...' : initialData ? 'Update' : 'Create'}
+            <Divider sx={{ my: 1.5, borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                disabled={loading}
+                sx={{
+                  borderRadius: 3,
+                  px: 5,
+                  py: 1.2,
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  textTransform: 'none',
+                  background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
+                  boxShadow: '0 4px 16px rgba(239,68,68,0.25)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #dc2626 0%, #ea580c 100%)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 6px 20px rgba(239,68,68,0.35)',
+                  },
+                  '&.Mui-disabled': {
+                    background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+                    color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {loading ? 'Saving...' : initialData ? 'Update Event' : 'Register Event'}
               </Button>
             </Box>
           </Grid>
         </Grid>
       </form>
-    </Paper>
+    </Box>
   );
 };
 
