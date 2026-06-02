@@ -3,7 +3,7 @@ import {
   Box, Grid, Typography, Card, CardContent, Paper, 
   Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Chip, Button, IconButton, Avatar, 
-  LinearProgress, Divider, Tooltip 
+  LinearProgress, Divider, Tooltip, useTheme, CircularProgress
 } from '@mui/material';
 import { 
   XAxis, YAxis, CartesianGrid, Tooltip as ChartTooltip, 
@@ -32,8 +32,12 @@ const StatCard = ({ title, value, icon, color, gradient }) => (
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': { 
       transform: 'translateY(-4px)',
-      boxShadow: (theme) => theme.palette.mode === 'dark' ? '0 12px 30px rgba(0,0,0,0.35)' : '0 12px 30px rgba(99, 102, 241, 0.08)',
-      borderColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(99, 102, 241, 0.25)',
+      boxShadow: (theme) => theme.palette.mode === 'dark' 
+        ? '0 12px 30px rgba(0,0,0,0.35)' 
+        : `0 12px 30px ${color === 'primary' ? 'rgba(239, 68, 68, 0.06)' : color === 'warning' ? 'rgba(245, 158, 11, 0.06)' : 'rgba(16, 185, 129, 0.06)'}`,
+      borderColor: (theme) => theme.palette.mode === 'dark' 
+        ? 'rgba(255, 255, 255, 0.12)' 
+        : `${color === 'primary' ? 'rgba(239, 68, 68, 0.25)' : color === 'warning' ? 'rgba(245, 158, 11, 0.25)' : 'rgba(16, 185, 129, 0.25)'}`,
     }
   }}>
     <Box sx={{ 
@@ -49,8 +53,16 @@ const StatCard = ({ title, value, icon, color, gradient }) => (
     <CardContent sx={{ p: 2.5 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
         <Avatar sx={{ 
-          bgcolor: color === 'primary' ? 'rgba(99, 102, 241, 0.12)' : color === 'warning' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)', 
-          color: color === 'primary' ? '#818cf8' : color === 'warning' ? '#f59e0b' : '#10b981', 
+          bgcolor: color === 'primary' 
+            ? 'rgba(239, 68, 68, 0.1)' 
+            : color === 'warning' 
+              ? 'rgba(245, 158, 11, 0.1)' 
+              : 'rgba(16, 185, 129, 0.1)', 
+          color: color === 'primary' 
+            ? '#ef4444' 
+            : color === 'warning' 
+              ? '#f59e0b' 
+              : '#10b981', 
           width: 44, 
           height: 44, 
           borderRadius: 2.5,
@@ -58,12 +70,12 @@ const StatCard = ({ title, value, icon, color, gradient }) => (
         }}>
           {icon}
         </Avatar>
-        <Typography color="text.secondary" variant="caption" fontWeight="800" sx={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <Typography color="text.secondary" variant="caption" fontWeight="800" sx={{ textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: '"Outfit", sans-serif' }}>
           {title}
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-        <Typography variant="h4" fontWeight="900" sx={{ color: 'text.primary', letterSpacing: '-0.03em' }}>{value}</Typography>
+        <Typography variant="h4" fontWeight="900" sx={{ color: 'text.primary', letterSpacing: '-0.03em', fontFamily: '"Outfit", sans-serif' }}>{value}</Typography>
         <Typography variant="caption" color="success.main" sx={{ fontWeight: '800', display: 'flex', alignItems: 'center', gap: 0.3 }}>
           <TrendingUpIcon sx={{ fontSize: 12 }} /> Live
         </Typography>
@@ -72,7 +84,25 @@ const StatCard = ({ title, value, icon, color, gradient }) => (
   </Card>
 );
 
+const getActionStyles = (action, isDark) => {
+  switch (action?.toUpperCase()) {
+    case 'LOGIN':
+      return { bg: 'rgba(16, 185, 129, 0.1)', border: 'rgba(16, 185, 129, 0.2)', text: isDark ? '#34d399' : '#059669' };
+    case 'DELETE':
+      return { bg: 'rgba(239, 68, 68, 0.1)', border: 'rgba(239, 68, 68, 0.2)', text: isDark ? '#f87171' : '#dc2626' };
+    case 'UPDATE':
+      return { bg: 'rgba(245, 158, 11, 0.1)', border: 'rgba(245, 158, 11, 0.2)', text: isDark ? '#fbbf24' : '#d97706' };
+    case 'CREATE':
+    case 'SYNC':
+      return { bg: 'rgba(59, 130, 246, 0.1)', border: 'rgba(59, 130, 246, 0.2)', text: isDark ? '#60a5fa' : '#2563eb' };
+    default:
+      return { bg: 'rgba(148, 163, 184, 0.1)', border: 'rgba(148, 163, 184, 0.2)', text: isDark ? '#cbd5e1' : '#475569' };
+  }
+};
+
 const AdminDashboard = () => {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const { showToast } = useToast();
   const [syncing, setSyncing] = useState(false);
   const [stats, setStats] = useState({ 
@@ -121,29 +151,47 @@ const AdminDashboard = () => {
   };
 
   return (
-    <Box sx={{ py: 1 }}>
+    <Box sx={{ pt: 2.5, pb: 2 }}>
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 2.5, mb: 3 }}>
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
             <AdminPanelSettingsIcon color="primary" sx={{ fontSize: 16 }} />
             <Typography variant="overline" fontWeight="900" color="primary" sx={{ letterSpacing: 1.5, lineHeight: 1 }}>SYSTEM COMMAND</Typography>
           </Box>
-          <Typography variant="h4" fontWeight="1000" sx={{ color: 'text.primary', letterSpacing: -0.5 }}>Control Center</Typography>
+          <Typography variant="h4" fontWeight="1000" sx={{ color: 'text.primary', letterSpacing: -0.5, fontFamily: '"Outfit", sans-serif' }}>Control Center</Typography>
         </Box>
         <Button 
           variant="contained" 
-          startIcon={syncing ? null : <SyncIcon />} 
+          startIcon={syncing ? <CircularProgress size={16} color="inherit" /> : <SyncIcon />} 
           onClick={handleSync} 
           disabled={syncing}
           sx={{ 
-            borderRadius: 3, 
+            borderRadius: 3.5, 
             px: 3, 
             py: 1, 
-            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)',
+            boxShadow: (theme) => theme.palette.mode === 'dark'
+              ? '0 4px 20px rgba(239, 68, 68, 0.15)'
+              : '0 4px 20px rgba(239, 68, 68, 0.25)',
+            background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
             textTransform: 'none',
             fontWeight: '800',
-            fontSize: '0.85rem',
-            width: { xs: '100%', sm: 'auto' }
+            fontSize: '0.88rem',
+            width: { xs: '100%', sm: 'auto' },
+            transition: 'all 0.2s ease',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #dc2626 0%, #ea580c 100%)',
+              boxShadow: (theme) => theme.palette.mode === 'dark'
+                ? '0 6px 24px rgba(239, 68, 68, 0.25)'
+                : '0 6px 24px rgba(239, 68, 68, 0.35)',
+              transform: 'translateY(-1px)',
+            },
+            '&.Mui-disabled': {
+              background: (theme) => theme.palette.mode === 'dark' 
+                ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.4) 0%, rgba(249, 115, 22, 0.2) 100%)'
+                : 'linear-gradient(135deg, rgba(239, 68, 68, 0.5) 0%, rgba(249, 115, 22, 0.3) 100%)',
+              color: 'rgba(255, 255, 255, 0.8) !important',
+              boxShadow: 'none',
+            }
           }}
         >
           {syncing ? 'Syncing...' : 'Sync USGS Data'}
@@ -157,7 +205,7 @@ const AdminDashboard = () => {
             value={stats.users} 
             icon={<PeopleIcon />} 
             color="primary" 
-            gradient="linear-gradient(135deg, #6366f1 0%, #a855f7 100%)"
+            gradient="linear-gradient(135deg, #ef4444 0%, #f97316 100%)"
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -192,14 +240,14 @@ const AdminDashboard = () => {
             boxShadow: 'none'
           }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-              <Typography variant="subtitle1" fontWeight="800" sx={{ color: 'text.primary' }}>System Growth & Activity</Typography>
+              <Typography variant="subtitle1" fontWeight="800" sx={{ color: 'text.primary', fontFamily: '"Outfit", sans-serif' }}>System Growth & Activity</Typography>
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#10b981' }} />
+                  <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#ef4444' }} />
                   <Typography variant="caption" fontWeight="700" sx={{ color: 'text.secondary' }}>Earthquakes</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#6366f1' }} />
+                  <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#3b82f6' }} />
                   <Typography variant="caption" fontWeight="700" sx={{ color: 'text.secondary' }}>Users</Typography>
                 </Box>
               </Box>
@@ -211,22 +259,22 @@ const AdminDashboard = () => {
               }))}>
                 <defs>
                   <linearGradient id="colorRecords" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.15}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.15}/>
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15}/>
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.15}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} />
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.08)" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: theme.palette.text.secondary, fontSize: 10, fontWeight: 600 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: theme.palette.text.secondary, fontSize: 10, fontWeight: 600 }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(148, 163, 184, 0.12)'} />
                 <ChartTooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', border: '1px solid rgba(148, 163, 184, 0.1)', borderRadius: '12px', color: '#f1f5f9', fontSize: '11px', fontWeight: 'bold' }} 
+                  contentStyle={{ backgroundColor: theme.palette.background.paper, border: `1px solid ${theme.palette.divider}`, borderRadius: '12px', color: theme.palette.text.primary, fontSize: '11px', fontWeight: 'bold', boxShadow: isDark ? '0 10px 30px rgba(0,0,0,0.5)' : '0 10px 30px rgba(0,0,0,0.05)' }} 
                 />
-                <Area type="monotone" name="Earthquakes" dataKey="records" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRecords)" />
-                <Area type="monotone" name="Users" dataKey="users" stroke="#6366f1" strokeWidth={2.5} fillOpacity={1} fill="url(#colorUsers)" />
+                <Area type="monotone" name="Earthquakes" dataKey="records" stroke="#ef4444" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRecords)" />
+                <Area type="monotone" name="Users" dataKey="users" stroke="#3b82f6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorUsers)" />
               </AreaChart>
             </ResponsiveContainer>
           </Paper>
@@ -248,16 +296,37 @@ const AdminDashboard = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               {stats.alerts.slice(0, 3).map((alert, index) => (
                 <Box key={index} sx={{ 
-                  p: 1.5, 
-                  borderRadius: 1.5, // Reduced border radius for a sharper, cleaner look
-                  bgcolor: alert.type === 'error' ? 'rgba(239, 68, 68, 0.08)' : alert.type === 'warning' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(59, 130, 246, 0.08)',
+                  p: 1.8, 
+                  borderRadius: '10px', 
+                  bgcolor: (theme) => alert.type === 'error' 
+                    ? (theme.palette.mode === 'dark' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)')
+                    : alert.type === 'warning' 
+                      ? (theme.palette.mode === 'dark' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(245, 158, 11, 0.05)')
+                      : (theme.palette.mode === 'dark' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)'),
                   border: '1px solid',
-                  borderColor: alert.type === 'error' ? 'rgba(239, 68, 68, 0.15)' : alert.type === 'warning' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)'
+                  borderColor: (theme) => alert.type === 'error' 
+                    ? (theme.palette.mode === 'dark' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.15)')
+                    : alert.type === 'warning' 
+                      ? (theme.palette.mode === 'dark' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.15)')
+                      : (theme.palette.mode === 'dark' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.15)'),
                 }}>
-                  <Typography variant="caption" fontWeight="800" sx={{ display: 'block', mb: 0.2, color: alert.type === 'error' ? '#f87171' : alert.type === 'warning' ? '#fbbf24' : '#60a5fa' }}>
+                  <Typography 
+                    variant="caption" 
+                    fontWeight="700" 
+                    sx={{ 
+                      display: 'block', 
+                      mb: 0.4, 
+                      color: (theme) => alert.type === 'error' 
+                        ? (theme.palette.mode === 'dark' ? '#f87171' : '#dc2626')
+                        : alert.type === 'warning' 
+                          ? (theme.palette.mode === 'dark' ? '#fbbf24' : '#d97706')
+                          : (theme.palette.mode === 'dark' ? '#60a5fa' : '#2563eb'),
+                      fontSize: '0.78rem'
+                    }}
+                  >
                     {alert.message}
                   </Typography>
-                  <Typography variant="caption" color="textSecondary">Just now</Typography>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.68rem', fontWeight: 500 }}>Just now</Typography>
                 </Box>
               ))}
               {stats.alerts.length === 0 && (
@@ -295,39 +364,42 @@ const AdminDashboard = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {stats.logs.map((log, i) => (
-                <TableRow key={i} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell sx={{ py: 1.5 }}>
-                    <Chip 
-                      label={log.action} 
-                      size="small" 
-                      sx={{ 
-                        height: 20,
-                        fontSize: '0.65rem',
-                        fontWeight: '800', 
-                        bgcolor: log.action === 'LOGIN' ? 'rgba(52, 211, 153, 0.12)' : log.action === 'DELETE' ? 'rgba(239, 68, 68, 0.12)' : 'rgba(148, 163, 184, 0.12)',
-                        color: log.action === 'LOGIN' ? '#34d399' : log.action === 'DELETE' ? '#f87171' : '#94a3b8',
-                        border: '1px solid',
-                        borderColor: log.action === 'LOGIN' ? 'rgba(52, 211, 153, 0.2)' : log.action === 'DELETE' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(148, 163, 184, 0.2)'
-                      }} 
-                    />
-                  </TableCell>
-                  <TableCell sx={{ py: 1.5 }}>
-                    <Typography variant="caption" fontWeight="700" sx={{ color: 'text.primary' }}>{log.resource}</Typography>
-                  </TableCell>
-                  <TableCell sx={{ py: 1.5, display: { xs: 'none', sm: 'table-cell' } }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Avatar sx={{ width: 22, height: 22, fontSize: '0.65rem', bgcolor: 'primary.main', fontWeight: 'bold' }}>
-                        {log.userId?.name?.[0] || 'S'}
-                      </Avatar>
-                      <Typography variant="caption" fontWeight="700" sx={{ color: 'text.primary' }}>{log.userId?.name || 'System'}</Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ py: 1.5 }}>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>{new Date(log.timestamp).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}</Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {stats.logs.map((log, i) => {
+                const styles = getActionStyles(log.action, isDark);
+                return (
+                  <TableRow key={i} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell sx={{ py: 1.5 }}>
+                      <Chip 
+                        label={log.action} 
+                        size="small" 
+                        sx={{ 
+                          height: 20,
+                          fontSize: '0.65rem',
+                          fontWeight: '800', 
+                          bgcolor: styles.bg,
+                          color: styles.text,
+                          border: '1px solid',
+                          borderColor: styles.border
+                        }} 
+                      />
+                    </TableCell>
+                    <TableCell sx={{ py: 1.5 }}>
+                      <Typography variant="caption" fontWeight="700" sx={{ color: 'text.primary' }}>{log.resource}</Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 1.5, display: { xs: 'none', sm: 'table-cell' } }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Avatar sx={{ width: 22, height: 22, fontSize: '0.65rem', bgcolor: 'primary.main', fontWeight: 'bold' }}>
+                          {log.userId?.name?.[0] || 'S'}
+                        </Avatar>
+                        <Typography variant="caption" fontWeight="700" sx={{ color: 'text.primary' }}>{log.userId?.name || 'System'}</Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ py: 1.5 }}>
+                      <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>{new Date(log.timestamp).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}</Typography>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
