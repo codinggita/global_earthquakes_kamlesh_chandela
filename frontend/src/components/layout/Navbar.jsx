@@ -85,31 +85,41 @@ const Navbar = ({ onToggleSidebar }) => {
 
   /* Shared icon button style */
   const iconBtnSx = {
-    width: 34, height: 34, borderRadius: '9px',
-    color: isDark ? '#4b5e74' : '#9ca3af',
+    width: 36, height: 36, borderRadius: '12px',
+    color: isDark ? '#ffffff' : '#0f172a',
+    border: '2px solid transparent',
     transition: 'all 0.15s ease',
     '&:hover': {
-      color: isDark ? '#f1f5f9' : '#111827',
-      background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+      color: '#ff5e7e',
+      border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+      background: isDark ? '#2e1b23' : '#ffecf0',
+      transform: 'translateY(-1px)',
+      boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
     },
   };
 
   /* Notif color */
-  const notifColor = (type) => ({ error: '#f87171', warning: '#fbbf24', info: '#60a5fa' }[type] || '#60a5fa');
+  const notifColor = (type) => ({ error: '#ff5e7e', warning: '#fbbf24', info: '#3b82f6' }[type] || '#3b82f6');
 
   return (
     <Box
       sx={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        height: 54, px: 2,
-        borderRadius: '14px',
-        background: isDark ? 'rgba(6, 10, 22, 0.90)' : 'rgba(255,255,255,0.92)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        border: isDark ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(0,0,0,0.08)',
-        boxShadow: isDark ? '0 4px 28px rgba(0,0,0,0.55)' : '0 4px 28px rgba(0,0,0,0.07)',
+        height: 60, px: 3,
+        borderRadius: '20px',
+        background: isDark ? '#161a2b' : '#ffffff',
+        border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+        boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
+        position: 'relative',
       }}
     >
+      {/* Floating decoration in the navbar */}
+      <Box sx={{ position: 'absolute', right: 230, top: -14, zIndex: 10, pointerEvents: 'none' }} className="float-slow">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke={isDark ? '#ffffff' : '#0f172a'} strokeWidth="2.5" strokeLinejoin="round" fill="#fbbf24" />
+        </svg>
+      </Box>
+
       {/* ── Left ─────────────────────────────────────────────── */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
         {/* Mobile menu toggle */}
@@ -120,9 +130,9 @@ const Navbar = ({ onToggleSidebar }) => {
         {/* Page title */}
         <Typography
           sx={{
-            fontFamily: '"Outfit", sans-serif',
-            fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.02em',
-            color: isDark ? '#f1f5f9' : '#0f172a', lineHeight: 1,
+            fontFamily: '"Fredoka", sans-serif',
+            fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.02em',
+            color: isDark ? '#ffffff' : '#0f172a', lineHeight: 1,
           }}
         >
           {pageTitle}
@@ -132,21 +142,22 @@ const Navbar = ({ onToggleSidebar }) => {
         <Box
           sx={{
             display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 0.5,
-            px: 0.9, py: 0.3, borderRadius: '6px',
-            background: 'rgba(16,185,129,0.08)',
-            border: '1px solid rgba(16,185,129,0.18)',
+            px: 1.2, py: 0.4, borderRadius: '8px',
+            background: isDark ? '#162a26' : '#e6f9f3',
+            border: isDark ? '1.5px solid #ffffff' : '1.5px solid #0f172a',
+            boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
           }}
         >
           <Box
             sx={{
-              width: 5, height: 5, borderRadius: '50%', bgcolor: '#10b981',
+              width: 6, height: 6, borderRadius: '50%', bgcolor: '#10b981',
               animation: 'liveBlink 2s ease-in-out infinite',
               '@keyframes liveBlink': {
                 '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.25 },
               },
             }}
           />
-          <Typography sx={{ fontSize: '0.57rem', fontWeight: 800, color: '#34d399', letterSpacing: '0.07em' }}>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.65rem', fontWeight: 800, color: '#10b981', letterSpacing: '0.07em' }}>
             LIVE
           </Typography>
         </Box>
@@ -160,38 +171,45 @@ const Navbar = ({ onToggleSidebar }) => {
           onClick={(e) => setUserAnchor(e.currentTarget)}
           sx={{
             display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 0.8,
-            px: 0.9, py: 0.4, mr: 0.5, borderRadius: '10px', cursor: 'pointer',
-            transition: 'background 0.15s ease',
-            '&:hover': { background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' },
+            px: 1.2, py: 0.5, mr: 0.5, borderRadius: '12px', cursor: 'pointer',
+            border: '2px solid transparent',
+            transition: 'all 0.15s ease',
+            '&:hover': {
+              background: isDark ? '#2e1b23' : '#ffecf0',
+              border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+              transform: 'translateY(-1px)',
+              boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
+            },
           }}
         >
           <Avatar
             sx={{
-              width: 26, height: 26, fontSize: '0.67rem', fontWeight: 800,
+              width: 28, height: 28, fontSize: '0.74rem', fontWeight: 800,
               background: user?.role === 'admin'
-                ? 'linear-gradient(135deg, #ef4444, #f97316)'
+                ? 'linear-gradient(135deg, #ff5e7e, #fbbf24)'
                 : 'linear-gradient(135deg, #3b82f6, #10b981)',
+              border: isDark ? '1.5px solid #ffffff' : '1.5px solid #0f172a',
             }}
           >
             {user?.name?.charAt(0)?.toUpperCase() || 'U'}
           </Avatar>
           <Box>
-            <Typography sx={{ fontSize: '0.76rem', fontWeight: 600, color: isDark ? '#e2e8f0' : '#111827', lineHeight: 1.2 }}>
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.8rem', fontWeight: 800, color: isDark ? '#ffffff' : '#0f172a', lineHeight: 1.2 }}>
               {user?.name?.split(' ')[0] || 'User'}
             </Typography>
-            <Typography sx={{ fontSize: '0.58rem', fontWeight: 600, color: user?.role === 'admin' ? '#f87171' : '#34d399', lineHeight: 1, textTransform: 'capitalize' }}>
+            <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.62rem', fontWeight: 800, color: '#ff5e7e', lineHeight: 1, textTransform: 'capitalize' }}>
               {user?.role}
             </Typography>
           </Box>
         </Box>
 
         {/* Separator */}
-        <Box sx={{ width: 1, height: 20, bgcolor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)', display: { xs: 'none', sm: 'block' }, mx: 0.3 }} />
+        <Box sx={{ width: 2, height: 20, bgcolor: isDark ? '#ffffff' : '#0f172a', display: { xs: 'none', sm: 'block' }, mx: 0.8 }} />
 
         {/* Theme toggle */}
         <Tooltip title={isDark ? 'Light mode' : 'Dark mode'} arrow>
           <IconButton onClick={toggleColorMode} sx={iconBtnSx}>
-            {isDark ? <LightModeIcon sx={{ fontSize: 17 }} /> : <DarkModeIcon sx={{ fontSize: 17 }} />}
+            {isDark ? <LightModeIcon sx={{ fontSize: 18 }} /> : <DarkModeIcon sx={{ fontSize: 18 }} />}
           </IconButton>
         </Tooltip>
 
@@ -202,12 +220,13 @@ const Navbar = ({ onToggleSidebar }) => {
               badgeContent={unreadCount}
               sx={{
                 '& .MuiBadge-badge': {
-                  fontSize: '0.55rem', fontWeight: 800, minWidth: 14, height: 14,
-                  bgcolor: '#ef4444', color: '#fff', top: 1, right: 1,
+                  fontSize: '0.6rem', fontWeight: 900, minWidth: 16, height: 16,
+                  bgcolor: '#ff5e7e', color: '#fff', top: 2, right: 2,
+                  border: isDark ? '1.5px solid #ffffff' : '1.5px solid #0f172a',
                 },
               }}
             >
-              <NotificationsNoneIcon sx={{ fontSize: 17 }} />
+              <NotificationsNoneIcon sx={{ fontSize: 18 }} />
             </Badge>
           </IconButton>
         </Tooltip>
@@ -216,9 +235,9 @@ const Navbar = ({ onToggleSidebar }) => {
         <Tooltip title="Sign out" arrow>
           <IconButton
             onClick={handleLogout}
-            sx={{ ...iconBtnSx, '&:hover': { color: '#ef4444', background: 'rgba(239,68,68,0.08)' } }}
+            sx={{ ...iconBtnSx, '&:hover': { color: '#ff5e7e', background: isDark ? '#2e1b23' : '#ffecf0' } }}
           >
-            <LogoutIcon sx={{ fontSize: 17 }} />
+            <LogoutIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
       </Box>
@@ -232,9 +251,9 @@ const Navbar = ({ onToggleSidebar }) => {
           elevation: 0,
           sx: {
             width: 320, mt: 1.2, borderRadius: '14px', overflow: 'hidden',
-            bgcolor: isDark ? '#08101f' : '#fff',
-            border: isDark ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(0,0,0,0.08)',
-            boxShadow: isDark ? '0 16px 52px rgba(0,0,0,0.65)' : '0 16px 52px rgba(0,0,0,0.10)',
+            bgcolor: isDark ? '#161a2b' : '#fff',
+            border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+            boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
           },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
@@ -242,19 +261,19 @@ const Navbar = ({ onToggleSidebar }) => {
       >
         {/* Header */}
         <Box sx={{ px: 2, py: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography sx={{ fontSize: '0.82rem', fontWeight: 700, color: isDark ? '#f1f5f9' : '#111827' }}>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.88rem', fontWeight: 800, color: isDark ? '#ffffff' : '#0f172a' }}>
             Seismic Alerts
           </Typography>
           {unreadCount > 0 && (
-            <Box sx={{ px: 0.8, py: 0.2, borderRadius: '5px', bgcolor: 'rgba(239,68,68,0.10)' }}>
-              <Typography sx={{ fontSize: '0.6rem', fontWeight: 700, color: '#f87171' }}>
+            <Box sx={{ px: 1, py: 0.3, borderRadius: '6px', bgcolor: '#ffecf0', border: '1.5px solid #ff5e7e' }}>
+              <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.62rem', fontWeight: 800, color: '#ff5e7e' }}>
                 {unreadCount} new
               </Typography>
             </Box>
           )}
         </Box>
 
-        <Divider sx={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' }} />
+        <Divider sx={{ borderColor: isDark ? '#ffffff' : '#0f172a', borderWidth: '1px' }} />
 
         {/* Items */}
         <Box sx={{ maxHeight: 300, overflowY: 'auto' }}>
@@ -265,21 +284,21 @@ const Navbar = ({ onToggleSidebar }) => {
                 key={n.id}
                 onClick={() => { navigate('/earthquakes'); handleCloseNotifications(); }}
                 sx={{
-                  py: 1.2, px: 2, flexDirection: 'column', alignItems: 'flex-start', gap: 0.3,
-                  borderBottom: isDark ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(0,0,0,0.04)',
-                  '&:hover': { bgcolor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' },
+                  py: 1.5, px: 2, flexDirection: 'column', alignItems: 'flex-start', gap: 0.3,
+                  borderBottom: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.1)',
+                  '&:hover': { bgcolor: isDark ? '#2e1b23' : '#ffecf0' },
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.7, width: '100%' }}>
-                  <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: c, flexShrink: 0 }} />
-                  <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: c, flex: 1 }} noWrap>
+                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: c, border: isDark ? '1px solid #ffffff' : '1px solid #0f172a', flexShrink: 0 }} />
+                  <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.78rem', fontWeight: 800, color: c, flex: 1 }} noWrap>
                     {n.title}
                   </Typography>
-                  <Typography sx={{ fontSize: '0.6rem', fontWeight: 500, color: isDark ? '#3f5068' : '#9ca3af' }}>
+                  <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.62rem', fontWeight: 700, color: isDark ? '#9ca3af' : '#475569' }}>
                     {n.time}
                   </Typography>
                 </Box>
-                <Typography sx={{ fontSize: '0.75rem', color: isDark ? '#7a8ea6' : '#4b5563', pl: 1.7 }} noWrap>
+                <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.74rem', color: isDark ? '#9ca3af' : '#475569', pl: 1.7 }} noWrap>
                   {n.message}
                 </Typography>
               </MenuItem>
@@ -287,19 +306,19 @@ const Navbar = ({ onToggleSidebar }) => {
           })}
           {notifications.length === 0 && (
             <Box sx={{ py: 3.5, textAlign: 'center' }}>
-              <Typography sx={{ fontSize: '0.78rem', color: isDark ? '#3f5068' : '#9ca3af', fontWeight: 500 }}>
+              <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.78rem', color: isDark ? '#9ca3af' : '#475569', fontWeight: 700 }}>
                 No new alerts
               </Typography>
             </Box>
           )}
         </Box>
 
-        <Divider sx={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' }} />
+        <Divider sx={{ borderColor: isDark ? '#ffffff' : '#0f172a', borderWidth: '1px' }} />
         <Box
           onClick={() => { navigate('/earthquakes'); handleCloseNotifications(); }}
-          sx={{ py: 1.1, textAlign: 'center', cursor: 'pointer', '&:hover': { bgcolor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)' } }}
+          sx={{ py: 1.5, textAlign: 'center', cursor: 'pointer', '&:hover': { bgcolor: isDark ? '#2e1b23' : '#ffecf0' } }}
         >
-          <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: '#ef4444' }}>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.78rem', fontWeight: 800, color: '#ff5e7e' }}>
             View all activity →
           </Typography>
         </Box>
@@ -314,9 +333,9 @@ const Navbar = ({ onToggleSidebar }) => {
           elevation: 0,
           sx: {
             width: 180, mt: 1.2, borderRadius: '12px', overflow: 'hidden',
-            bgcolor: isDark ? '#08101f' : '#fff',
-            border: isDark ? '1px solid rgba(255,255,255,0.07)' : '1px solid rgba(0,0,0,0.08)',
-            boxShadow: isDark ? '0 8px 36px rgba(0,0,0,0.55)' : '0 8px 36px rgba(0,0,0,0.08)',
+            bgcolor: isDark ? '#161a2b' : '#fff',
+            border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+            boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
           },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
@@ -324,17 +343,17 @@ const Navbar = ({ onToggleSidebar }) => {
       >
         <MenuItem
           onClick={() => { navigate('/profile'); setUserAnchor(null); }}
-          sx={{ fontSize: '0.82rem', gap: 1.2, py: 1, color: isDark ? '#e2e8f0' : '#111827' }}
+          sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '0.85rem', gap: 1.2, py: 1.2, color: isDark ? '#ffffff' : '#0f172a', '&:hover': { bgcolor: isDark ? '#2e1b23' : '#ffecf0' } }}
         >
-          <AccountCircleIcon sx={{ fontSize: 17, color: 'text.secondary' }} />
+          <AccountCircleIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
           My Profile
         </MenuItem>
-        <Divider sx={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)', my: 0.5 }} />
+        <Divider sx={{ borderColor: isDark ? '#ffffff' : '#0f172a', borderWidth: '1px', my: 0.5 }} />
         <MenuItem
           onClick={handleLogout}
-          sx={{ fontSize: '0.82rem', gap: 1.2, py: 1, color: '#ef4444', '&:hover': { bgcolor: 'rgba(239,68,68,0.06)' } }}
+          sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '0.85rem', gap: 1.2, py: 1.2, color: '#ff5e7e', '&:hover': { bgcolor: isDark ? '#2e1b23' : '#ffecf0' } }}
         >
-          <LogoutIcon sx={{ fontSize: 17 }} />
+          <LogoutIcon sx={{ fontSize: 18 }} />
           Sign out
         </MenuItem>
       </Menu>

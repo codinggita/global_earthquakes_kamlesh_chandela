@@ -61,46 +61,51 @@ const Sidebar = ({ open, onClose }) => {
 
   const paperStyles = {
     width: SIDEBAR_WIDTH,
-    background: isDark ? '#040810' : '#ffffff',
-    borderRight: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.07)',
-    height: '100vh',
+    background: isDark ? '#161a2b' : '#ffffff',
+    border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+    borderRadius: '24px',
+    boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
+    height: { xs: '100vh', md: 'calc(100vh - 32px)' },
+    m: { xs: 0, md: 2 },
     overflowX: 'hidden',
     backgroundImage: 'none',
   };
 
   const drawerContent = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', position: 'relative' }}>
 
       {/* ── Logo ─────────────────────────────────────────────── */}
-      <Box sx={{ px: 2.5, pt: 2, pb: 1.5 }}>
+      <Box sx={{ px: 2.5, pt: 3, pb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
           {/* Icon */}
           <Box
             sx={{
-              width: 34, height: 34, borderRadius: '8px', flexShrink: 0,
-              background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
+              width: 38, height: 38, borderRadius: '12px', flexShrink: 0,
+              background: '#ff5e7e',
+              border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+              boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 14px rgba(239,68,68,0.3)',
             }}
           >
-            <TerrainIcon sx={{ color: '#fff', fontSize: 18 }} />
+            <TerrainIcon sx={{ color: '#fff', fontSize: 20 }} />
           </Box>
 
           {/* Brand name */}
           <Box>
             <Typography
               sx={{
-                fontFamily: '"Outfit", sans-serif',
-                fontWeight: 800, fontSize: '0.94rem', letterSpacing: '-0.02em',
-                color: isDark ? '#f1f5f9' : '#0f172a', lineHeight: 1.1,
+                fontFamily: '"Fredoka", sans-serif',
+                fontWeight: 800, fontSize: '1.05rem', letterSpacing: '-0.02em',
+                color: isDark ? '#ffffff' : '#0f172a', lineHeight: 1.1,
               }}
             >
-              Seismic<span style={{ color: '#ef4444' }}>Pro</span>
+              Seismic<span style={{ color: '#ff5e7e' }}>Pro</span>
             </Typography>
             <Typography
               sx={{
-                fontSize: '0.55rem', letterSpacing: '0.1rem', textTransform: 'uppercase',
-                color: isDark ? '#475569' : '#9ca3af', fontWeight: 700, mt: 0.1,
+                fontFamily: '"Quicksand", sans-serif',
+                fontSize: '0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase',
+                color: isDark ? '#9ca3af' : '#475569', fontWeight: 800, mt: 0.1,
               }}
             >
               Monitor System
@@ -110,7 +115,7 @@ const Sidebar = ({ open, onClose }) => {
       </Box>
 
       {/* ── Top divider ─────────────────────────────────────── */}
-      <Box sx={{ mx: 2, height: '1px', bgcolor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', mb: 0.5 }} />
+      <Box sx={{ mx: 2, height: '2px', bgcolor: isDark ? '#ffffff' : '#0f172a', mb: 1 }} />
 
       {/* ── Navigation ──────────────────────────────────────── */}
       <Box 
@@ -120,29 +125,30 @@ const Sidebar = ({ open, onClose }) => {
           overflowX: 'hidden', 
           pb: 0.5,
           '&::-webkit-scrollbar': {
-            width: '4px',
+            width: '6px',
           },
           '&::-webkit-scrollbar-track': {
             background: 'transparent',
           },
           '&::-webkit-scrollbar-thumb': {
-            background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
-            borderRadius: '4px',
+            background: isDark ? '#ffffff' : '#0f172a',
+            borderRadius: '10px',
           },
           '&::-webkit-scrollbar-thumb:hover': {
-            background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+            background: '#ff5e7e',
           },
         }}
       >
         {sections.map((section, sIdx) => (
-          <Box key={sIdx} sx={{ mb: 0.2 }}>
+          <Box key={sIdx} sx={{ mb: 0.5 }}>
             {/* Section label */}
             <Typography
               sx={{
-                fontSize: '0.66rem', fontWeight: 700, letterSpacing: '0.08em',
+                fontFamily: '"Fredoka", sans-serif',
+                fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.08em',
                 textTransform: 'uppercase', px: 2.5,
-                pt: sIdx === 0 ? 0.8 : 1.5, pb: 0.4,
-                color: isDark ? '#334155' : '#94a3b8',
+                pt: sIdx === 0 ? 0.8 : 1.5, pb: 0.6,
+                color: isDark ? '#9ca3af' : '#475569',
               }}
             >
               {section.label}
@@ -153,29 +159,55 @@ const Sidebar = ({ open, onClose }) => {
               const active = isActive(item.path);
               const Icon   = item.icon;
               return (
-                <Box key={item.path} sx={{ px: 1.5, mb: 0.2 }}>
+                <Box key={item.path} sx={{ px: 1.5, mb: 0.5, position: 'relative' }}>
+                  {item.text === 'Audit Logs' && (
+                    <Box sx={{ position: 'absolute', right: 26, top: 11, zIndex: 10, pointerEvents: 'none' }} className="float-slow">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#fbbf24" stroke="#0f172a" strokeWidth="2.5" strokeLinejoin="round" />
+                      </svg>
+                    </Box>
+                  )}
+                  {item.text === 'Settings' && (
+                    <Box sx={{ position: 'absolute', right: 26, top: 11, zIndex: 10, pointerEvents: 'none' }} className="float-medium">
+                      <svg width="20" height="20" viewBox="0 0 30 30" fill="none">
+                        <path d="M5 25C10 20 10 10 15 15C20 20 20 5 25 10" stroke="#10b981" strokeWidth="3.5" strokeLinecap="round" />
+                      </svg>
+                    </Box>
+                  )}
                   <Box
                     onClick={() => { navigate(item.path); onClose?.(); }}
                     sx={{
                       display: 'flex', alignItems: 'center', gap: 0,
-                      borderRadius: '10px', py: 1.2, px: 1.4,
+                      borderRadius: '14px', py: 1.2, px: 1.4,
                       cursor: 'pointer', position: 'relative', overflow: 'hidden',
-                      transition: 'all 0.2s ease',
+                      transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
                       background: active
-                        ? (isDark ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(249, 115, 22, 0.02) 100%)' : 'linear-gradient(135deg, rgba(239, 68, 68, 0.04) 0%, rgba(249, 115, 22, 0.01) 100%)')
+                        ? (isDark ? '#2e1b23' : '#ffecf0')
                         : 'transparent',
-                      borderLeft: active ? '3px solid #ef4444' : '3px solid transparent',
+                      border: active
+                        ? (isDark ? '2px solid #ffffff' : '2px solid #0f172a')
+                        : '2px solid transparent',
+                      boxShadow: active
+                        ? (isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a')
+                        : 'none',
                       '&:hover': {
                         background: active
-                          ? (isDark ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(249, 115, 22, 0.04) 100%)' : 'linear-gradient(135deg, rgba(239, 68, 68, 0.06) 0%, rgba(249, 115, 22, 0.02) 100%)')
-                          : (isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'),
+                          ? (isDark ? '#2e1b23' : '#ffecf0')
+                          : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'),
+                        border: active
+                          ? (isDark ? '2px solid #ffffff' : '2px solid #0f172a')
+                          : (isDark ? '2px solid rgba(255,255,255,0.1)' : '2px solid rgba(15,23,42,0.15)'),
+                        transform: 'translateY(-2px)',
+                        boxShadow: active
+                          ? (isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a')
+                          : (isDark ? '2px 2px 0px 0px rgba(255,255,255,0.1)' : '2px 2px 0px 0px rgba(15,23,42,0.15)'),
                       },
                       '&:hover .nav-icon': {
-                        transform: 'translateX(2px)',
-                        color: active ? '#ef4444' : (isDark ? '#e2e8f0' : '#0f172a'),
+                        transform: 'scale(1.15)',
+                        color: active ? '#ff5e7e' : (isDark ? '#ffffff' : '#0f172a'),
                       },
                       '&:hover .nav-text': {
-                        color: active ? (isDark ? '#fff' : '#000') : (isDark ? '#cbd5e1' : '#1e293b'),
+                        color: active ? '#ff5e7e' : (isDark ? '#ffffff' : '#0f172a'),
                       }
                     }}
                   >
@@ -185,9 +217,9 @@ const Sidebar = ({ open, onClose }) => {
                       sx={{
                         minWidth: 32, display: 'flex', alignItems: 'center',
                         color: active
-                          ? '#ef4444'
-                          : (isDark ? '#475569' : '#94a3b8'),
-                        transition: 'all 0.2s ease',
+                          ? '#ff5e7e'
+                          : (isDark ? '#9ca3af' : '#475569'),
+                        transition: 'all 0.18s ease',
                       }}
                     >
                       <Icon sx={{ fontSize: 20 }} />
@@ -197,12 +229,13 @@ const Sidebar = ({ open, onClose }) => {
                     <Typography
                       className="nav-text"
                       sx={{
+                        fontFamily: '"Fredoka", sans-serif',
                         fontSize: '0.94rem', letterSpacing: '-0.015em',
-                        fontWeight: active ? 600 : 500,
+                        fontWeight: 800,
                         color: active
-                          ? (isDark ? '#f8fafc' : '#0f172a')
-                          : (isDark ? '#64748b' : '#64748b'),
-                        transition: 'all 0.2s ease', lineHeight: 1.2,
+                          ? (isDark ? '#ffffff' : '#0f172a')
+                          : (isDark ? '#9ca3af' : '#475569'),
+                        transition: 'all 0.18s ease', lineHeight: 1.2,
                       }}
                     >
                       {item.text}
@@ -216,46 +249,56 @@ const Sidebar = ({ open, onClose }) => {
       </Box>
 
       {/* ── Bottom divider ──────────────────────────────────── */}
-      <Box sx={{ mx: 2.5, height: '1px', bgcolor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }} />
+      <Box sx={{ mx: 2, height: '2px', bgcolor: isDark ? '#ffffff' : '#0f172a', mt: 0.5 }} />
 
       {/* ── User Card ───────────────────────────────────────── */}
-      <Box sx={{ px: 2, pb: 2, pt: 1.5 }}>
+      <Box sx={{ px: 2, pb: 3, pt: 2, position: 'relative' }}>
+        {/* Floating decoration in the background */}
+        <Box sx={{ position: 'absolute', right: 20, top: -10, zIndex: 5, pointerEvents: 'none' }} className="float-fast">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5L12 2Z" fill="#ff5e7e" stroke="#0f172a" strokeWidth="2" />
+          </svg>
+        </Box>
+
         <Box
           onClick={() => navigate('/profile')}
           sx={{
             display: 'flex', alignItems: 'center', gap: 1,
-            p: 1, borderRadius: '12px', cursor: 'pointer',
-            background: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
-            border: isDark ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(0,0,0,0.05)',
-            transition: 'all 0.2s ease',
+            p: 1.2, borderRadius: '16px', cursor: 'pointer',
+            background: isDark ? 'rgba(255,255,255,0.03)' : '#fffdf8',
+            border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+            boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
+            transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
             '&:hover': {
-              background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
-              borderColor: isDark ? 'rgba(239,68,68,0.20)' : 'rgba(239,68,68,0.15)',
+              transform: 'translateY(-2px)',
+              boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
             },
           }}
         >
           <Avatar
             sx={{
-              width: 30, height: 30, fontSize: '0.74rem', fontWeight: 800, flexShrink: 0,
+              width: 32, height: 32, fontSize: '0.78rem', fontWeight: 800, flexShrink: 0,
               background: user?.role === 'admin'
-                ? 'linear-gradient(135deg, #ef4444, #f97316)'
+                ? 'linear-gradient(135deg, #ff5e7e, #fbbf24)'
                 : 'linear-gradient(135deg, #3b82f6, #10b981)',
+              border: isDark ? '1.5px solid #ffffff' : '1.5px solid #0f172a',
             }}
           >
             {user?.name?.[0]?.toUpperCase() || 'U'}
           </Avatar>
           <Box sx={{ flex: 1, overflow: 'hidden' }}>
-            <Typography noWrap sx={{ fontSize: '0.78rem', fontWeight: 600, lineHeight: 1.3, color: isDark ? '#e2e8f0' : '#111827' }}>
+            <Typography noWrap sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.8rem', fontWeight: 800, lineHeight: 1.3, color: isDark ? '#ffffff' : '#0f172a' }}>
               {user?.name || 'User'}
             </Typography>
-            <Typography noWrap sx={{ fontSize: '0.62rem', lineHeight: 1, color: isDark ? '#475569' : '#9ca3af', fontWeight: 500, mt: 0.1, textTransform: 'capitalize' }}>
+            <Typography noWrap sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.65rem', lineHeight: 1, color: isDark ? '#9ca3af' : '#475569', fontWeight: 700, mt: 0.1, textTransform: 'capitalize' }}>
               {user?.role || 'Member'}
             </Typography>
           </Box>
           {/* Online dot */}
           <Box
             sx={{
-              width: 7, height: 7, borderRadius: '50%', bgcolor: '#10b981',
+              width: 8, height: 8, borderRadius: '50%', bgcolor: '#10b981',
+              border: isDark ? '1px solid #ffffff' : '1px solid #0f172a',
               flexShrink: 0, boxShadow: '0 0 6px rgba(16,185,129,0.5)',
             }}
           />
@@ -274,7 +317,15 @@ const Sidebar = ({ open, onClose }) => {
         ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': paperStyles,
+          '& .MuiDrawer-paper': {
+            ...paperStyles,
+            width: SIDEBAR_WIDTH,
+            m: 0,
+            borderRadius: 0,
+            border: 'none',
+            borderRight: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+            height: '100vh',
+          },
         }}
       >
         {drawerContent}
@@ -285,9 +336,14 @@ const Sidebar = ({ open, onClose }) => {
         variant="permanent"
         open
         sx={{
-          width: SIDEBAR_WIDTH, flexShrink: 0,
+          width: SIDEBAR_WIDTH + 32, flexShrink: 0,
           display: { xs: 'none', md: 'block' },
-          '& .MuiDrawer-paper': { ...paperStyles, position: 'relative' },
+          '& .MuiDrawer-paper': { 
+            ...paperStyles, 
+            position: 'fixed',
+            left: 0,
+            top: 0,
+          },
         }}
       >
         {drawerContent}
