@@ -14,42 +14,36 @@ const ActionChip = ({ action }) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   
-  const getActionStyles = (action, isDark) => {
+  const getActionStyles = (action) => {
     switch (action?.toUpperCase()) {
-      case 'LOGIN':
-        return { bg: 'rgba(16, 185, 129, 0.1)', border: 'rgba(16, 185, 129, 0.2)', text: isDark ? '#34d399' : '#059669', friendly: 'Log In' };
-      case 'LOGOUT':
-        return { bg: 'rgba(148, 163, 184, 0.1)', border: 'rgba(148, 163, 184, 0.2)', text: isDark ? '#cbd5e1' : '#475569', friendly: 'Log Out' };
-      case 'DELETE':
-        return { bg: 'rgba(239, 68, 68, 0.1)', border: 'rgba(239, 68, 68, 0.2)', text: isDark ? '#f87171' : '#dc2626', friendly: 'Remove' };
-      case 'UPDATE':
-        return { bg: 'rgba(245, 158, 11, 0.1)', border: 'rgba(245, 158, 11, 0.2)', text: isDark ? '#fbbf24' : '#d97706', friendly: 'Edit / Update' };
-      case 'CREATE':
-        return { bg: 'rgba(59, 130, 246, 0.1)', border: 'rgba(59, 130, 246, 0.2)', text: isDark ? '#60a5fa' : '#2563eb', friendly: 'Create' };
-      case 'SYNC':
-        return { bg: 'rgba(139, 92, 246, 0.1)', border: 'rgba(139, 92, 246, 0.2)', text: isDark ? '#a78bfa' : '#6d28d9', friendly: 'USGS Sync' };
-      default:
-        return { bg: 'rgba(148, 163, 184, 0.1)', border: 'rgba(148, 163, 184, 0.2)', text: isDark ? '#cbd5e1' : '#475569', friendly: action };
+      case 'LOGIN':   return { bg: '#e6f9f3', border: '#10b981', text: '#10b981', friendly: 'Log In' };
+      case 'LOGOUT':  return { bg: '#f1f5f9', border: '#94a3b8', text: '#475569', friendly: 'Log Out' };
+      case 'DELETE':  return { bg: '#ffecf0', border: '#ff5e7e', text: '#ff5e7e', friendly: 'Remove' };
+      case 'UPDATE':  return { bg: '#fff4d2', border: '#fbbf24', text: '#d97706', friendly: 'Edit / Update' };
+      case 'CREATE':  return { bg: '#e6f0ff', border: '#3b82f6', text: '#3b82f6', friendly: 'Create' };
+      case 'SYNC':    return { bg: '#e8e5ff', border: '#8b5cf6', text: '#8b5cf6', friendly: 'USGS Sync' };
+      default:        return { bg: '#f1f5f9', border: '#94a3b8', text: '#475569', friendly: action };
     }
   };
 
-  const styles = getActionStyles(action, isDark);
+  const styles = getActionStyles(action);
 
   return (
-    <Chip 
-      label={styles.friendly} 
-      size="small" 
-      sx={{ 
+    <Chip
+      label={styles.friendly}
+      size="small"
+      sx={{
         height: 22,
-        fontSize: '0.68rem',
-        fontWeight: '800', 
+        fontFamily: '"Fredoka", sans-serif',
+        fontSize: '0.65rem',
+        fontWeight: 800,
         bgcolor: styles.bg,
         color: styles.text,
-        border: '1px solid',
-        borderColor: styles.border,
+        border: `1.5px solid ${styles.border}`,
         letterSpacing: '0.03em',
-        minWidth: 90
-      }} 
+        minWidth: 90,
+        '& .MuiChip-label': { px: 1.2 },
+      }}
     />
   );
 };
@@ -167,27 +161,96 @@ const AuditLogs = () => {
 
   return (
     <Box sx={{ pt: 2.5, pb: 2 }}>
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-          <HistoryIcon color="primary" sx={{ fontSize: 16 }} />
-          <Typography variant="overline" fontWeight="900" color="primary" sx={{ letterSpacing: 1.5, lineHeight: 1 }}>SYSTEM LOGS</Typography>
+
+      {/* ── Rich Banner Header ──────────────────────────── */}
+      <Box sx={{
+        mb: 4, p: 3, borderRadius: '24px',
+        background: isDark
+          ? 'linear-gradient(135deg, #1e1228 0%, #161a2b 100%)'
+          : 'linear-gradient(135deg, #e8e5ff 0%, #fdfbf7 100%)',
+        border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+        boxShadow: isDark ? '5px 5px 0px 0px #ffffff' : '5px 5px 0px 0px #0f172a',
+        display: 'flex', flexDirection: { xs: 'column', sm: 'row' },
+        alignItems: { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between',
+        gap: 2, position: 'relative', overflow: 'hidden',
+      }}>
+        {/* decorative circles */}
+        <Box sx={{ position: 'absolute', right: 20, top: -20, width: 70, height: 70, borderRadius: '50%', border: '3px dashed #8b5cf6', opacity: 0.15, pointerEvents: 'none' }} />
+        <Box sx={{ position: 'absolute', right: 70, bottom: -25, width: 50, height: 50, borderRadius: '50%', border: '2px dashed #ff5e7e', opacity: 0.12, pointerEvents: 'none' }} />
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{
+            p: 1.5, borderRadius: '16px', background: '#8b5cf6', color: '#ffffff',
+            border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+            boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+            display: 'flex', alignItems: 'center', flexShrink: 0,
+          }}>
+            <HistoryIcon sx={{ fontSize: 26 }} />
+          </Box>
+          <Box>
+            <Typography sx={{
+              fontFamily: '"Fredoka", sans-serif', fontSize: '0.7rem', fontWeight: 800,
+              letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8b5cf6', mb: 0.3,
+            }}>📋 System Logs</Typography>
+            <Typography sx={{
+              fontFamily: '"Fredoka", sans-serif', fontWeight: 800,
+              fontSize: { xs: '1.6rem', sm: '2rem' },
+              letterSpacing: '-0.03em', color: isDark ? '#ffffff' : '#0f172a', lineHeight: 1,
+            }}>Audit Trail</Typography>
+            <Typography sx={{
+              fontFamily: '"Quicksand", sans-serif', fontSize: '0.78rem', fontWeight: 700,
+              color: isDark ? '#9ca3af' : '#64748b', mt: 0.4,
+            }}>Every action on the platform — fully traceable</Typography>
+          </Box>
         </Box>
-        <Typography variant="h4" fontWeight="1000" sx={{ color: 'text.primary', letterSpacing: -0.5, fontFamily: '"Outfit", sans-serif' }}>Audit Trail</Typography>
+
+        {/* Total badge */}
+        <Box sx={{
+          px: 2.5, py: 1.5, borderRadius: '16px', textAlign: 'center', flexShrink: 0,
+          background: isDark ? '#1e1a33' : '#e8e5ff',
+          border: '2px solid #8b5cf6',
+          boxShadow: '3px 3px 0px 0px #8b5cf6',
+        }}>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '1.8rem', color: '#8b5cf6', lineHeight: 1 }}>
+            {total.toLocaleString()}
+          </Typography>
+          <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.7rem', fontWeight: 800, color: isDark ? '#a78bfa' : '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.06em', mt: 0.3 }}>
+            Total Logs
+          </Typography>
+        </Box>
       </Box>
 
-      <Paper 
-        sx={{ 
+      <Box
+        sx={{
           overflow: 'hidden',
-          background: isDark ? 'rgba(17, 24, 39, 0.65)' : 'rgba(255, 255, 255, 0.75)',
-          backdropFilter: 'blur(20px)',
-          border: isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(148, 163, 184, 0.12)',
-          borderRadius: 4,
-          boxShadow: 'none'
+          borderRadius: '24px',
+          background: isDark ? '#161a2b' : '#ffffff',
+          border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+          boxShadow: isDark ? '5px 5px 0px 0px #ffffff' : '5px 5px 0px 0px #0f172a',
         }}
       >
-        <TableContainer 
+        {/* Table section header */}
+        <Box sx={{
+          px: 3, py: 1.8, display: 'flex', alignItems: 'center', gap: 1.5,
+          background: isDark ? 'rgba(255,255,255,0.03)' : '#fdfbf7',
+          borderBottom: isDark ? '2px solid rgba(255,255,255,0.15)' : '2px solid rgba(15,23,42,0.15)',
+        }}>
+          <Box sx={{ p: 0.7, borderRadius: '9px', background: isDark ? '#1e1a33' : '#e8e5ff', color: '#8b5cf6', border: '1.5px solid #8b5cf6', display: 'flex' }}>
+            <HistoryIcon sx={{ fontSize: 15 }} />
+          </Box>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '0.95rem', color: isDark ? '#ffffff' : '#0f172a' }}>
+            Activity Log — Page {page}
+          </Typography>
+          <Box sx={{ ml: 'auto', px: 1.2, py: 0.3, borderRadius: '999px', background: '#8b5cf6', border: '1.5px solid #0f172a' }}>
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.7rem', fontWeight: 800, color: '#ffffff' }}>
+              {logs.length} entries
+            </Typography>
+          </Box>
+        </Box>
+
+        <TableContainer
           sx={{ 
-            maxHeight: '70vh',
+            maxHeight: '65vh',
             '&::-webkit-scrollbar': {
               width: '4px',
               height: '4px'
@@ -204,14 +267,14 @@ const AuditLogs = () => {
             },
           }}
         >
-          <Table stickyHeader sx={{ '& .MuiTableCell-stickyHeader': { bgcolor: isDark ? '#08101f' : '#f8fafc', backgroundImage: 'none' } }}>
+          <Table stickyHeader sx={{ '& .MuiTableCell-stickyHeader': { bgcolor: isDark ? 'rgba(255,255,255,0.03)' : '#fdfbf7', backgroundImage: 'none' } }}>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: '800', py: 2, fontSize: '0.75rem', fontFamily: '"Outfit", sans-serif' }}>ACTION</TableCell>
-                <TableCell sx={{ fontWeight: '800', py: 2, fontSize: '0.75rem', fontFamily: '"Outfit", sans-serif' }}>RESOURCE</TableCell>
-                <TableCell sx={{ fontWeight: '800', py: 2, fontSize: '0.75rem', fontFamily: '"Outfit", sans-serif' }}>PERFORMED BY</TableCell>
-                <TableCell sx={{ fontWeight: '800', py: 2, fontSize: '0.75rem', fontFamily: '"Outfit", sans-serif' }}>TIMESTAMP</TableCell>
-                <TableCell align="center" sx={{ fontWeight: '800', py: 2, fontSize: '0.75rem', fontFamily: '"Outfit", sans-serif' }}>DETAILS</TableCell>
+                <TableCell sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, py: 2, fontSize: '0.72rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>ACTION</TableCell>
+                <TableCell sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, py: 2, fontSize: '0.72rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>RESOURCE</TableCell>
+                <TableCell sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, py: 2, fontSize: '0.72rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>PERFORMED BY</TableCell>
+                <TableCell sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, py: 2, fontSize: '0.72rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>TIMESTAMP</TableCell>
+                <TableCell align="center" sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, py: 2, fontSize: '0.72rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}>DETAILS</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -239,7 +302,21 @@ const AuditLogs = () => {
                   </TableCell>
                   <TableCell align="center" sx={{ py: 1.8 }}>
                     <Tooltip title="View Details">
-                      <IconButton color="primary" size="small" onClick={() => setSelectedLog(log)} sx={{ bgcolor: isDark ? 'rgba(239, 68, 68, 0.05)' : 'rgba(239, 68, 68, 0.03)', '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)' } }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => setSelectedLog(log)}
+                        sx={{
+                          width: 30, height: 30, borderRadius: '8px',
+                          bgcolor: isDark ? '#2e1b23' : '#ffecf0',
+                          color: '#ff5e7e',
+                          border: isDark ? '1.5px solid #ffffff' : '1.5px solid #ff5e7e',
+                          transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                          '&:hover': {
+                            transform: 'translate(-1px,-1px)',
+                            boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #ff5e7e',
+                          },
+                        }}
+                      >
                         <InfoIcon sx={{ fontSize: 16 }} />
                       </IconButton>
                     </Tooltip>
@@ -267,37 +344,42 @@ const AuditLogs = () => {
             setPage(1);
           }}
           rowsPerPageOptions={[5, 10, 25, 50]}
-          sx={{ borderTop: '1px solid rgba(148, 163, 184, 0.08)', '& .MuiTablePagination-selectLabel, & .MuiTablePagination-input': { fontWeight: 600 } }}
+          sx={{
+            borderTop: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+            fontFamily: '"Quicksand", sans-serif',
+            fontWeight: 700,
+            '& .MuiTablePagination-selectLabel, & .MuiTablePagination-input': { fontWeight: 800, fontFamily: '"Quicksand", sans-serif' },
+          }}
         />
-      </Paper>
+      </Box>
 
-      <Dialog 
-        open={!!selectedLog} 
-        onClose={() => setSelectedLog(null)} 
-        fullWidth 
-        maxWidth="sm" 
-        PaperProps={{ 
-          sx: { 
-            borderRadius: 4, 
-            background: (theme) => theme.palette.mode === 'dark' ? '#08101f' : '#ffffff',
+      <Dialog
+        open={!!selectedLog}
+        onClose={() => setSelectedLog(null)}
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{
+          sx: {
+            borderRadius: '20px',
+            background: isDark ? '#161a2b' : '#ffffff',
             backgroundImage: 'none',
-            border: (theme) => theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(148, 163, 184, 0.12)',
-            boxShadow: (theme) => theme.palette.mode === 'dark' ? '0 24px 80px rgba(0,0,0,0.55)' : '0 24px 80px rgba(99,102,241,0.06)'
-          } 
+            border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+            boxShadow: isDark ? '8px 8px 0px 0px #ffffff' : '8px 8px 0px 0px #0f172a',
+          }
         }}
       >
-        <DialogTitle sx={{ fontWeight: '800', display: 'flex', alignItems: 'center', gap: 1, color: 'text.primary', fontFamily: '"Outfit", sans-serif', pt: 2.5, pb: 1.5 }}>
-          <InfoIcon color="primary" sx={{ fontSize: 20 }} /> Log Activity Details
+        <DialogTitle sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 1, color: isDark ? '#ffffff' : '#0f172a', pt: 2.5, pb: 1.5 }}>
+          <InfoIcon sx={{ color: '#ff5e7e', fontSize: 20 }} /> Log Activity Details
         </DialogTitle>
-        <Divider sx={{ borderColor: 'rgba(148, 163, 184, 0.08)' }} />
+        <Divider sx={{ borderColor: isDark ? '#ffffff' : '#0f172a', borderWidth: '1px' }} />
         <DialogContent sx={{ px: 3, py: 2 }}>
           {selectedLog && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
               
               {/* Natural language summary box */}
-              <Box sx={{ p: 1.8, borderRadius: 2.5, bgcolor: 'rgba(239, 68, 68, 0.04)', border: '1px solid rgba(239, 68, 68, 0.12)' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'primary.main', mb: 0.5, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Activity Summary</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary', lineHeight: 1.4 }}>
+              <Box sx={{ p: 1.8, borderRadius: '12px', bgcolor: isDark ? '#2e1b23' : '#ffecf0', border: isDark ? '1.5px solid rgba(255,255,255,0.1)' : '1.5px solid #ff5e7e' }}>
+                <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, color: '#ff5e7e', mb: 0.5, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Activity Summary</Typography>
+                <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontWeight: 700, color: isDark ? '#ffffff' : '#0f172a', lineHeight: 1.5, fontSize: '0.85rem' }}>
                   {getNaturalSummary(selectedLog)}
                 </Typography>
               </Box>
@@ -429,8 +511,25 @@ const AuditLogs = () => {
             </Box>
           )}
         </DialogContent>
-        <DialogActions sx={{ p: 2, px: 3, borderTop: (theme) => `1px solid ${theme.palette.divider}` }}>
-          <Button onClick={() => setSelectedLog(null)} variant="outlined" sx={{ borderRadius: 2.5, px: 3.5, textTransform: 'none', fontWeight: 700, fontSize: '0.8rem' }}>Close Details</Button>
+        <DialogActions sx={{ p: 2, px: 3, borderTop: isDark ? '1.5px solid #ffffff' : '1.5px solid #0f172a' }}>
+          <Button
+            onClick={() => setSelectedLog(null)}
+            variant="contained"
+            sx={{
+              borderRadius: '12px', px: 3.5,
+              textTransform: 'none',
+              fontFamily: '"Fredoka", sans-serif',
+              fontWeight: 800, fontSize: '0.85rem',
+              background: '#ff5e7e', color: '#ffffff',
+              border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+              boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
+              '&:hover': {
+                background: '#e03f60',
+                transform: 'translate(-1px,-1px)',
+                boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+              },
+            }}
+          >Close Details</Button>
         </DialogActions>
       </Dialog>
     </Box>

@@ -8,47 +8,41 @@ import PublicIcon from '@mui/icons-material/Public';
 import { fetchCountryAnalysis, fetchMagnitudeAnalysis, fetchDepthAnalysis, fetchMonthlyAnalysis, fetchHighestMagnitude, fetchDeepest } from '../../features/analytics/analyticsSlice';
 import Loader from '../../components/common/Loader';
 
-const COLORS = ['#6366f1', '#10b981', '#fbbf24', '#ef4444', '#8b5cf6', '#0ea5e9', '#ec4899'];
+const COLORS = ['#ff5e7e', '#10b981', '#fbbf24', '#3b82f6', '#8b5cf6', '#0ea5e9', '#f97316'];
 
-const AnalyticsStatCard = ({ title, value, subtitle, icon, color, isDark }) => {
+const AnalyticsStatCard = ({ title, value, subtitle, icon, color, cardBg, isDark }) => {
   return (
     <Box
       sx={{
         p: 2.5,
-        borderRadius: '14px',
+        borderRadius: '20px',
         height: '100%',
-        background: isDark ? 'rgba(10,16,30,0.94)' : 'rgba(255,255,255,0.94)',
-        border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.07)',
-        borderLeft: `3.5px solid ${color}`,
-        backdropFilter: 'blur(12px)',
+        background: cardBg || (isDark ? '#2e1b23' : '#ffe6eb'),
+        border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+        boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
         position: 'relative',
         overflow: 'hidden',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
         '&:hover': {
-          transform: 'translateY(-3px)',
-          boxShadow: isDark
-            ? `0 10px 30px rgba(0,0,0,0.4), 0 0 0 1px ${color}22`
-            : `0 10px 30px rgba(0,0,0,0.07), 0 0 0 1px ${color}18`,
+          transform: 'translate(-3px, -3px)',
+          boxShadow: isDark ? '6px 6px 0px 0px #ffffff' : '6px 6px 0px 0px #0f172a',
         },
       }}
     >
-      {/* Ambient orb */}
-      <Box sx={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80, borderRadius: '50%', background: color, opacity: isDark ? 0.07 : 0.05, filter: 'blur(16px)', pointerEvents: 'none' }} />
-
       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
-        <Typography sx={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase', color: isDark ? '#475569' : '#94a3b8' }}>
+        <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: isDark ? '#ffffff' : '#0f172a' }}>
           {title}
         </Typography>
-        <Box sx={{ p: 0.8, borderRadius: '8px', background: `${color}14`, color, display: 'flex', alignItems: 'center', '& .MuiSvgIcon-root': { fontSize: '16px !important' } }}>
+        <Box sx={{ p: 0.8, borderRadius: '10px', background: '#ffffff', color, display: 'flex', alignItems: 'center', border: isDark ? '2px solid #ffffff' : '2px solid #0f172a', boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a', '& .MuiSvgIcon-root': { fontSize: '18px !important' } }}>
           {icon}
         </Box>
       </Box>
 
-      <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: '2rem', lineHeight: 1.1, letterSpacing: '-0.04em', color: 'text.primary', mb: 1 }}>
+      <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '2rem', lineHeight: 1.1, letterSpacing: '-0.04em', color: isDark ? '#ffffff' : '#0f172a', mb: 1 }}>
         {value}
       </Typography>
 
-      <Typography variant="body2" sx={{ fontSize: '0.72rem', color: 'text.secondary', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+      <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.72rem', color: isDark ? '#9ca3af' : '#475569', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {subtitle}
       </Typography>
     </Box>
@@ -114,42 +108,27 @@ const AnalyticsDashboard = () => {
       <Box sx={{ mb: 4, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 2 }}>
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-            <Box sx={{ width: 12, height: 2, bgcolor: '#ef4444', borderRadius: 1 }} />
-            <Typography variant="overline" fontWeight="900" color="primary" sx={{ letterSpacing: 1.5, lineHeight: 1 }}>
+            <Box sx={{ width: 12, height: 4, bgcolor: '#ff5e7e', borderRadius: '2px', border: isDark ? '1px solid #ffffff' : '1px solid #0f172a' }} />
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#ff5e7e' }}>
               Analytics Portal
             </Typography>
           </Box>
           <Typography
-            sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: { xs: '1.5rem', sm: '1.8rem' }, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}
+            sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: { xs: '1.6rem', sm: '2rem' }, letterSpacing: '-0.03em', color: isDark ? '#ffffff' : '#0f172a', lineHeight: 1.1 }}
           >
             Global Seismic Insights
           </Typography>
-          <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 500, mt: 0.4 }}>
+          <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.8rem', color: isDark ? '#9ca3af' : '#475569', fontWeight: 700, mt: 0.4 }}>
             Real-time aggregation of earthquake indicators and trend patterns
           </Typography>
         </Box>
         <FormControl size="small" sx={{ minWidth: 160, width: { xs: '100%', sm: 'auto' } }}>
-          <InputLabel sx={{ fontSize: '0.85rem' }}>Analytics Year</InputLabel>
+          <InputLabel sx={{ fontSize: '0.85rem', fontFamily: '"Quicksand", sans-serif', fontWeight: 700 }}>Analytics Year</InputLabel>
           <Select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
             label="Analytics Year"
-            sx={{
-              borderRadius: '10px',
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              background: isDark ? 'rgba(10,16,30,0.7)' : 'rgba(255,255,255,0.7)',
-              backdropFilter: 'blur(10px)',
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.12)',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: isDark ? 'rgba(255,255,255,0.16)' : 'rgba(0,0,0,0.22)',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#ef4444',
-              }
-            }}
+            sx={{ borderRadius: '12px', fontSize: '0.85rem', fontWeight: 700, fontFamily: '"Quicksand", sans-serif' }}
           >
             <MenuItem value="">All Years</MenuItem>
             {availableYears.map(year => (
@@ -167,7 +146,8 @@ const AnalyticsDashboard = () => {
             value={highestMagnitude?.data?.mag ? `M ${highestMagnitude.data.mag}` : 'N/A'}
             subtitle={highestMagnitude?.data?.place || 'No details available'}
             icon={<WarningIcon />}
-            color="#ef4444"
+            color="#ff5e7e"
+            cardBg={isDark ? '#2e1b23' : '#ffecf0'}
             isDark={isDark}
           />
         </Grid>
@@ -183,7 +163,8 @@ const AnalyticsDashboard = () => {
               (Array.isArray(deepest?.data) ? deepest?.data[0]?.place : deepest?.data?.place) || 'Unknown Location'
             }
             icon={<LayersIcon />}
-            color="#818cf8"
+            color="#8b5cf6"
+            cardBg={isDark ? '#241f3b' : '#e8e5ff'}
             isDark={isDark}
           />
         </Grid>
@@ -194,6 +175,7 @@ const AnalyticsDashboard = () => {
             subtitle="Registered across standard zones"
             icon={<PublicIcon />}
             color="#10b981"
+            cardBg={isDark ? '#162a26' : '#e6f9f3'}
             isDark={isDark}
           />
         </Grid>
@@ -202,17 +184,17 @@ const AnalyticsDashboard = () => {
       {/* Chart Panels */}
       <Grid container spacing={3.5}>
         <Grid item xs={12} lg={8}>
-          <Paper
+          <Box
             sx={{
               p: 3,
-              borderRadius: '16px',
-              background: isDark ? 'rgba(10,16,30,0.7)' : 'rgba(255,255,255,0.7)',
-              border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(148,163,184,0.12)',
-              backdropFilter: 'blur(16px)',
-              boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.2)' : '0 8px 32px rgba(0,0,0,0.03)',
+              height: '100%',
+              borderRadius: '20px',
+              background: isDark ? '#161a2b' : '#ffffff',
+              border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+              boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
             }}
           >
-            <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: '1.05rem', mb: 3, color: 'text.primary', letterSpacing: '-0.01em' }}>
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '1.1rem', mb: 3, color: isDark ? '#ffffff' : '#0f172a', letterSpacing: '-0.01em' }}>
               Monthly Seismic Activity Trend
             </Typography>
             <ResponsiveContainer width="100%" height={400}>
@@ -227,21 +209,21 @@ const AnalyticsDashboard = () => {
                 <Line yAxisId="right" type="monotone" dataKey="avgMagnitude" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Avg Magnitude" />
               </LineChart>
             </ResponsiveContainer>
-          </Paper>
+          </Box>
         </Grid>
 
         <Grid item xs={12} lg={4}>
-          <Paper
+          <Box
             sx={{
               p: 3,
-              borderRadius: '16px',
-              background: isDark ? 'rgba(10,16,30,0.7)' : 'rgba(255,255,255,0.7)',
-              border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(148,163,184,0.12)',
-              backdropFilter: 'blur(16px)',
-              boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.2)' : '0 8px 32px rgba(0,0,0,0.03)',
+              height: '100%',
+              borderRadius: '20px',
+              background: isDark ? '#161a2b' : '#ffffff',
+              border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+              boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
             }}
           >
-            <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: '1.05rem', mb: 3, color: 'text.primary', letterSpacing: '-0.01em' }}>
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '1.1rem', mb: 3, color: isDark ? '#ffffff' : '#0f172a', letterSpacing: '-0.01em' }}>
               Magnitude Categories
             </Typography>
             <ResponsiveContainer width="100%" height={400}>
@@ -253,21 +235,21 @@ const AnalyticsDashboard = () => {
                 <Legend verticalAlign="bottom" height={36} wrapperStyle={{ paddingTop: '10px' }} />
               </PieChart>
             </ResponsiveContainer>
-          </Paper>
+          </Box>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Paper
+          <Box
             sx={{
               p: 3,
-              borderRadius: '16px',
-              background: isDark ? 'rgba(10,16,30,0.7)' : 'rgba(255,255,255,0.7)',
-              border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(148,163,184,0.12)',
-              backdropFilter: 'blur(16px)',
-              boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.2)' : '0 8px 32px rgba(0,0,0,0.03)',
+              height: '100%',
+              borderRadius: '20px',
+              background: isDark ? '#161a2b' : '#ffffff',
+              border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+              boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
             }}
           >
-            <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: '1.05rem', mb: 3, color: 'text.primary', letterSpacing: '-0.01em' }}>
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '1.1rem', mb: 3, color: isDark ? '#ffffff' : '#0f172a', letterSpacing: '-0.01em' }}>
               Top 10 High Activity Zones
             </Typography>
             <ResponsiveContainer width="100%" height={350}>
@@ -279,21 +261,21 @@ const AnalyticsDashboard = () => {
                 <Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} barSize={16} />
               </BarChart>
             </ResponsiveContainer>
-          </Paper>
+          </Box>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Paper
+          <Box
             sx={{
               p: 3,
-              borderRadius: '16px',
-              background: isDark ? 'rgba(10,16,30,0.7)' : 'rgba(255,255,255,0.7)',
-              border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(148,163,184,0.12)',
-              backdropFilter: 'blur(16px)',
-              boxShadow: isDark ? '0 8px 32px rgba(0,0,0,0.2)' : '0 8px 32px rgba(0,0,0,0.03)',
+              height: '100%',
+              borderRadius: '20px',
+              background: isDark ? '#161a2b' : '#ffffff',
+              border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+              boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
             }}
           >
-            <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: '1.05rem', mb: 3, color: 'text.primary', letterSpacing: '-0.01em' }}>
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '1.1rem', mb: 3, color: isDark ? '#ffffff' : '#0f172a', letterSpacing: '-0.01em' }}>
               Depth Profile Analysis
             </Typography>
             <ResponsiveContainer width="100%" height={350}>
@@ -305,7 +287,7 @@ const AnalyticsDashboard = () => {
                 <Tooltip contentStyle={{ backgroundColor: theme.palette.background.paper, border: `1px solid ${theme.palette.divider}`, borderRadius: '12px', color: theme.palette.text.primary, fontSize: '12px', fontWeight: 600, boxShadow: isDark ? '0 10px 30px rgba(0,0,0,0.5)' : '0 10px 30px rgba(0,0,0,0.05)' }} />
               </RadarChart>
             </ResponsiveContainer>
-          </Paper>
+          </Box>
         </Grid>
       </Grid>
     </Box>
