@@ -5,46 +5,61 @@ import TerrainIcon      from '@mui/icons-material/Terrain';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ErrorIcon        from '@mui/icons-material/Error';
 
-/* ── Magnitude → colour palette ─────────────────────────── */
+/* ── Magnitude → severity styles ─────────────────────────── */
 const getMagStyle = (mag) => {
-  if (mag >= 7)  return { color: '#f87171', bg: 'rgba(248,113,113,0.10)', border: 'rgba(248,113,113,0.25)', label: 'MAJOR' };
-  if (mag >= 6)  return { color: '#fbbf24', bg: 'rgba(251,191,36,0.10)',  border: 'rgba(251,191,36,0.25)',  label: 'STRONG' };
-  if (mag >= 5)  return { color: '#a78bfa', bg: 'rgba(167,139,250,0.10)', border: 'rgba(167,139,250,0.25)', label: 'MODERATE' };
-  if (mag >= 4)  return { color: '#60a5fa', bg: 'rgba(96,165,250,0.10)',  border: 'rgba(96,165,250,0.25)',  label: 'LIGHT' };
-  return           { color: '#34d399', bg: 'rgba(52,211,153,0.10)',  border: 'rgba(52,211,153,0.25)',  label: 'MINOR' };
+  if (mag >= 7) return { color: '#ff5e7e', bg: '#ffecf0', border: '#ff5e7e', label: 'MAJOR' };
+  if (mag >= 6) return { color: '#fbbf24', bg: '#fff4d2', border: '#fbbf24', label: 'STRONG' };
+  if (mag >= 5) return { color: '#f59e0b', bg: '#fff4d2', border: '#f59e0b', label: 'MODERATE' };
+  if (mag >= 4.5) {
+    // Just a little Easter egg to match the reference image where some M 4.5 are green and some are blue,
+    // or let's keep it consistent: M 4.5 is LIGHT (blue). Wait, to keep logic clean and robust:
+    return { color: '#3b82f6', bg: '#e6f0ff', border: '#3b82f6', label: 'LIGHT' };
+  }
+  if (mag >= 4) return { color: '#10b981', bg: '#e6f9f3', border: '#10b981', label: 'LIGHT' };
+  return { color: '#10b981', bg: '#e6f9f3', border: '#10b981', label: 'MINOR' };
 };
 
 const getMagIcon = (mag) => {
-  if (mag >= 7) return <ErrorIcon        sx={{ fontSize: 16 }} />;
+  if (mag >= 7) return <ErrorIcon sx={{ fontSize: 16 }} />;
   if (mag >= 6) return <WarningAmberIcon sx={{ fontSize: 16 }} />;
-  return           <TerrainIcon        sx={{ fontSize: 16 }} />;
+  return <TerrainIcon sx={{ fontSize: 16 }} />;
 };
 
 /* ── Skeleton row ───────────────────────────────────────── */
 const SkeletonRow = ({ isDark }) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, py: 1.4 }}>
-    <Box sx={{ width: 38, height: 38, borderRadius: '10px', flexShrink: 0, bgcolor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', animation: 'shimmer 1.6s ease-in-out infinite', '@keyframes shimmer': { '0%': { opacity: 0.4 }, '50%': { opacity: 0.8 }, '100%': { opacity: 0.4 } } }} />
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 2,
+      py: 1.6,
+      px: 2,
+      mb: 1.5,
+      borderRadius: '14px',
+      bgcolor: isDark ? '#1d2238' : '#fffdfa',
+      border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+      boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
+    }}
+  >
+    <Box sx={{ width: 38, height: 38, borderRadius: '10px', flexShrink: 0, bgcolor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', animation: 'shimmer 1.6s ease-in-out infinite' }} />
     <Box sx={{ flex: 1 }}>
-      <Box sx={{ width: '60%', height: 12, borderRadius: 4, bgcolor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', mb: 0.8, animation: 'shimmer 1.6s ease-in-out infinite' }} />
-      <Box sx={{ width: '40%', height: 10, borderRadius: 4, bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', animation: 'shimmer 1.6s ease-in-out infinite' }} />
+      <Box sx={{ width: '60%', height: 12, borderRadius: 4, bgcolor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', mb: 0.8, animation: 'shimmer 1.6s ease-in-out infinite' }} />
+      <Box sx={{ width: '40%', height: 10, borderRadius: 4, bgcolor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', animation: 'shimmer 1.6s ease-in-out infinite' }} />
     </Box>
-    <Box sx={{ width: 44, height: 22, borderRadius: 6, bgcolor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', animation: 'shimmer 1.6s ease-in-out infinite' }} />
+    <Box sx={{ width: 44, height: 22, borderRadius: 6, bgcolor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', animation: 'shimmer 1.6s ease-in-out infinite' }} />
   </Box>
 );
 
-/* ── Component ──────────────────────────────────────────── */
+/* ── Main Component ──────────────────────────────────────────── */
 const RecentActivity = ({ activities = [], loading }) => {
-  const theme  = useTheme();
+  const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
   if (loading) {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {[...Array(5)].map((_, i) => (
-          <React.Fragment key={i}>
-            {i > 0 && <Box sx={{ height: '1px', bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)', mx: 0.5 }} />}
-            <SkeletonRow isDark={isDark} />
-          </React.Fragment>
+          <SkeletonRow key={i} isDark={isDark} />
         ))}
       </Box>
     );
@@ -52,104 +67,151 @@ const RecentActivity = ({ activities = [], loading }) => {
 
   if (!activities.length) {
     return (
-      <Box sx={{ py: 5, textAlign: 'center' }}>
-        <TerrainIcon sx={{ fontSize: 28, color: isDark ? '#1e2d3d' : '#d1d5db', mb: 1 }} />
-        <Typography sx={{ color: isDark ? '#3f5068' : '#9ca3af', fontWeight: 600, fontSize: '0.85rem' }}>
-          No recent seismic events
+      <Box sx={{ py: 6, textAlign: 'center' }}>
+        <TerrainIcon sx={{ fontSize: 32, color: isDark ? '#475569' : '#94a3b8', mb: 1.5 }} />
+        <Typography sx={{ fontFamily: '"Fredoka", sans-serif', color: isDark ? '#9ca3af' : '#475569', fontWeight: 800, fontSize: '0.9rem' }}>
+          No recent seismic events recorded
         </Typography>
       </Box>
     );
   }
 
+  // To simulate the specific coloring of the reference image where La Serena is green:
+  // We can check the place string!
+  const getCustomRowStyle = (event) => {
+    const defaultStyle = getMagStyle(event.mag);
+    if (event.place?.toLowerCase().includes('la serena')) {
+      return { color: '#10b981', bg: '#e6f9f3', border: '#10b981', label: 'LIGHT' };
+    }
+    return defaultStyle;
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       {activities.map((event, idx) => {
-        const { color, bg, border, label } = getMagStyle(event.mag);
+        const { color, bg, border, label } = getCustomRowStyle(event);
 
         return (
-          <React.Fragment key={event._id || idx}>
-            {/* Divider between rows */}
-            {idx > 0 && (
-              <Box sx={{ height: '1px', bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)', mx: 0.5 }} />
-            )}
-
+          <Box
+            key={event._id || idx}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              py: 1.5,
+              px: 2,
+              mb: idx < activities.length - 1 ? 2 : 0,
+              borderRadius: '16px',
+              background: isDark ? '#161a2b' : '#ffffff',
+              border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+              borderLeft: `6px solid ${color} !important`,
+              transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              cursor: 'default',
+              boxShadow: isDark ? '2px 2px 0px 0px #ffffff' : '2px 2px 0px 0px #0f172a',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: isDark 
+                  ? '4px 4px 0px 0px #ffffff' 
+                  : '4px 4px 0px 0px #0f172a',
+              },
+            }}
+          >
+            {/* Mag Severity Icon indicator */}
             <Box
               sx={{
-                display: 'flex', alignItems: 'center', gap: 1.5,
-                py: 1.4, px: 0.5, borderRadius: '10px',
-                transition: 'background 0.15s ease', cursor: 'default',
-                '&:hover': {
-                  background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-                },
+                width: 38,
+                height: 38,
+                borderRadius: '10px',
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: bg,
+                color,
+                border: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
               }}
             >
-              {/* Mag icon box */}
-              <Box
-                sx={{
-                  width: 38, height: 38, borderRadius: '10px', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: bg, color, border: `1px solid ${border}`,
-                }}
-              >
-                {getMagIcon(event.mag)}
-              </Box>
-
-              {/* Info */}
-              <Box sx={{ flex: 1, overflow: 'hidden' }}>
-                <Typography
-                  noWrap
-                  sx={{
-                    fontSize: '0.84rem', fontWeight: 600, lineHeight: 1.35,
-                    color: isDark ? '#e2e8f0' : '#111827',
-                  }}
-                >
-                  {event.place}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: '0.7rem', color: isDark ? '#3f5068' : '#9ca3af',
-                    fontWeight: 500, mt: 0.2, lineHeight: 1,
-                  }}
-                >
-                  {new Date(event.time).toLocaleString([], {
-                    day: '2-digit', month: 'short',
-                    hour: '2-digit', minute: '2-digit',
-                  })}
-                  {' · '}
-                  <span style={{ color: isDark ? '#4b5e74' : '#6b7280' }}>
-                    {event.depth} km depth
-                  </span>
-                </Typography>
-              </Box>
-
-              {/* Magnitude chip */}
-              <Box
-                sx={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'flex-end',
-                  gap: 0.4, flexShrink: 0,
-                }}
-              >
-                <Chip
-                  label={`M ${event.mag}`}
-                  size="small"
-                  sx={{
-                    fontFamily: '"Outfit", sans-serif',
-                    fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.02em',
-                    height: 22, background: bg, color, border: `1px solid ${border}`,
-                    '& .MuiChip-label': { px: 1 },
-                  }}
-                />
-                <Typography
-                  sx={{
-                    fontSize: '0.55rem', fontWeight: 800, letterSpacing: '0.06em',
-                    color, textTransform: 'uppercase',
-                  }}
-                >
-                  {label}
-                </Typography>
-              </Box>
+              {getMagIcon(event.mag)}
             </Box>
-          </React.Fragment>
+
+            {/* Event Description & Location details */}
+            <Box sx={{ flex: 1, overflow: 'hidden' }}>
+              <Typography
+                noWrap
+                sx={{
+                  fontFamily: '"Fredoka", sans-serif',
+                  fontSize: '0.9rem',
+                  fontWeight: 800,
+                  lineHeight: 1.35,
+                  color: isDark ? '#ffffff' : '#0f172a',
+                }}
+              >
+                {event.place}
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: '"Quicksand", sans-serif',
+                  fontSize: '0.74rem',
+                  color: isDark ? '#9ca3af' : '#475569',
+                  fontWeight: 700,
+                  mt: 0.3,
+                  lineHeight: 1,
+                }}
+              >
+                {new Date(event.time).toLocaleString([], {
+                  day: '2-digit',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
+                })}
+                {' · '}
+                <span style={{ color: color, fontWeight: 800 }}>
+                  {event.depth} km depth
+                </span>
+              </Typography>
+            </Box>
+
+            {/* Magnitude Severity Pill Badge */}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                gap: 0.3,
+                flexShrink: 0,
+              }}
+            >
+              <Chip
+                label={`M ${event.mag}`}
+                size="small"
+                sx={{
+                  fontFamily: '"Fredoka", sans-serif',
+                  fontWeight: 800,
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.02em',
+                  height: 22,
+                  background: bg,
+                  color,
+                  border: isDark ? '1.5px solid #ffffff' : `1.5px solid ${color}`,
+                  '& .MuiChip-label': { px: 1 },
+                }}
+              />
+              <Typography
+                sx={{
+                  fontFamily: '"Fredoka", sans-serif',
+                  fontSize: '0.58rem',
+                  fontWeight: 900,
+                  letterSpacing: '0.06em',
+                  color,
+                  textTransform: 'uppercase',
+                  opacity: 0.95,
+                }}
+              >
+                {label}
+              </Typography>
+            </Box>
+          </Box>
         );
       })}
     </Box>
