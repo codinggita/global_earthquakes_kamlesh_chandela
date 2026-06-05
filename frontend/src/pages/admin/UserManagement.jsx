@@ -10,11 +10,11 @@ import PeopleIcon       from '@mui/icons-material/People';
 import api from '../../services/api';
 import { useToast } from '../../components/common/Toast';
 
-/* Role colour map */
+/* Role colour map — Neubrutalist pastels */
 const ROLE_STYLES = {
-  admin:     { bg: 'rgba(239,68,68,0.10)',   border: 'rgba(239,68,68,0.22)',   text: { dark: '#f87171', light: '#dc2626' } },
-  moderator: { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.22)',  text: { dark: '#fbbf24', light: '#d97706' } },
-  user:      { bg: 'rgba(59,130,246,0.10)',  border: 'rgba(59,130,246,0.22)',  text: { dark: '#60a5fa', light: '#2563eb' } },
+  admin:     { bg: '#ffecf0', border: '#ff5e7e', text: { dark: '#ff5e7e', light: '#e03f60' } },
+  moderator: { bg: '#fff4d2', border: '#fbbf24', text: { dark: '#fbbf24', light: '#d97706' } },
+  user:      { bg: '#e6f0ff', border: '#3b82f6', text: { dark: '#3b82f6', light: '#2563eb' } },
 };
 
 const UserManagement = () => {
@@ -49,35 +49,92 @@ const UserManagement = () => {
   return (
     <Box sx={{ pt: 2.5, pb: 2 }}>
 
-      {/* ── Page header ─────────────────────────────────────── */}
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-          <PeopleIcon color="primary" sx={{ fontSize: 16 }} />
-          <Typography variant="overline" fontWeight="900" color="primary" sx={{ letterSpacing: 1.5, lineHeight: 1 }}>
-            ADMINISTRATION
+      {/* ── Rich Banner Header ──────────────────────────── */}
+      <Box sx={{
+        mb: 4, p: 3, borderRadius: '24px',
+        background: isDark
+          ? 'linear-gradient(135deg, #1a233b 0%, #161a2b 100%)'
+          : 'linear-gradient(135deg, #e6f0ff 0%, #fdfbf7 100%)',
+        border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+        boxShadow: isDark ? '5px 5px 0px 0px #ffffff' : '5px 5px 0px 0px #0f172a',
+        display: 'flex', flexDirection: { xs: 'column', sm: 'row' },
+        alignItems: { xs: 'flex-start', sm: 'center' }, justifyContent: 'space-between',
+        gap: 2, position: 'relative', overflow: 'hidden',
+      }}>
+        {/* deco circles */}
+        <Box sx={{ position: 'absolute', right: 20, top: -20, width: 70, height: 70, borderRadius: '50%', border: '3px dashed #3b82f6', opacity: 0.15, pointerEvents: 'none' }} />
+        <Box sx={{ position: 'absolute', right: 70, bottom: -25, width: 50, height: 50, borderRadius: '50%', border: '2px dashed #ff5e7e', opacity: 0.12, pointerEvents: 'none' }} />
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{
+            p: 1.5, borderRadius: '16px', background: '#3b82f6', color: '#ffffff',
+            border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+            boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+            display: 'flex', alignItems: 'center', flexShrink: 0,
+          }}>
+            <PeopleIcon sx={{ fontSize: 26 }} />
+          </Box>
+          <Box>
+            <Typography sx={{
+              fontFamily: '"Fredoka", sans-serif', fontSize: '0.7rem', fontWeight: 800,
+              letterSpacing: '0.12em', textTransform: 'uppercase', color: '#3b82f6', mb: 0.3,
+            }}>Administration</Typography>
+            <Typography sx={{
+              fontFamily: '"Fredoka", sans-serif', fontWeight: 800,
+              fontSize: { xs: '1.6rem', sm: '2rem' },
+              letterSpacing: '-0.03em', color: isDark ? '#ffffff' : '#0f172a', lineHeight: 1,
+            }}>User Management</Typography>
+            <Typography sx={{
+              fontFamily: '"Quicksand", sans-serif', fontSize: '0.78rem', fontWeight: 700,
+              color: isDark ? '#9ca3af' : '#64748b', mt: 0.4,
+            }}>View, activate, and block platform accounts</Typography>
+          </Box>
+        </Box>
+
+        {/* User count badge */}
+        <Box sx={{
+          px: 2.5, py: 1.5, borderRadius: '16px', textAlign: 'center', flexShrink: 0,
+          background: isDark ? '#1a233b' : '#e6f0ff',
+          border: '2px solid #3b82f6',
+          boxShadow: '3px 3px 0px 0px #3b82f6',
+        }}>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '1.8rem', color: '#3b82f6', lineHeight: 1 }}>
+            {total.toLocaleString()}
+          </Typography>
+          <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.7rem', fontWeight: 800, color: isDark ? '#93c5fd' : '#2563eb', textTransform: 'uppercase', letterSpacing: '0.06em', mt: 0.3 }}>
+            Registered Users
           </Typography>
         </Box>
-        <Typography
-          sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: { xs: '1.5rem', sm: '1.8rem' }, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}
-        >
-          User Management
-        </Typography>
-        <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 500, mt: 0.4 }}>
-          {total} registered account{total !== 1 ? 's' : ''} on the platform
-        </Typography>
       </Box>
 
-      {/* ── Table ───────────────────────────────────────────── */}
-      <Paper
+      {/* ── Table ─────────────────────────────────── */}
+      <Box
         sx={{
           overflow: 'hidden',
-          background: isDark ? 'rgba(17,24,39,0.65)' : 'rgba(255,255,255,0.75)',
-          backdropFilter: 'blur(20px)',
-          border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(148,163,184,0.12)',
-          borderRadius: 4,
-          boxShadow: 'none',
+          borderRadius: '24px',
+          background: isDark ? '#161a2b' : '#ffffff',
+          border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+          boxShadow: isDark ? '5px 5px 0px 0px #ffffff' : '5px 5px 0px 0px #0f172a',
         }}
       >
+        {/* Table section header */}
+        <Box sx={{
+          px: 3, py: 1.8, display: 'flex', alignItems: 'center', gap: 1.5,
+          background: isDark ? 'rgba(255,255,255,0.03)' : '#fdfbf7',
+          borderBottom: isDark ? '2px solid rgba(255,255,255,0.15)' : '2px solid rgba(15,23,42,0.15)',
+        }}>
+          <Box sx={{ p: 0.7, borderRadius: '9px', background: isDark ? '#1a233b' : '#e6f0ff', color: '#3b82f6', border: '1.5px solid #3b82f6', display: 'flex' }}>
+            <PeopleIcon sx={{ fontSize: 15 }} />
+          </Box>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '0.95rem', color: isDark ? '#ffffff' : '#0f172a' }}>
+            All Accounts
+          </Typography>
+          <Box sx={{ ml: 'auto', px: 1.2, py: 0.3, borderRadius: '999px', background: '#3b82f6', border: '1.5px solid #0f172a' }}>
+            <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.7rem', fontWeight: 800, color: '#ffffff' }}>
+              {users.length} shown
+            </Typography>
+          </Box>
+        </Box>
         <TableContainer
           sx={{
             '&::-webkit-scrollbar': { width: '4px', height: '4px' },
@@ -92,9 +149,11 @@ const UserManagement = () => {
                     key={h}
                     align={i === 5 ? 'center' : 'left'}
                     sx={{
+                      fontFamily: '"Fredoka", sans-serif',
                       fontWeight: 800, py: 2, fontSize: '0.72rem', letterSpacing: '0.06em',
-                      textTransform: 'uppercase', fontFamily: '"Outfit", sans-serif',
-                      bgcolor: isDark ? '#08101f' : '#f8fafc', backgroundImage: 'none',
+                      textTransform: 'uppercase',
+                      bgcolor: isDark ? 'rgba(255,255,255,0.03)' : '#fdfbf7',
+                      backgroundImage: 'none',
                       display: i === 1 ? { xs: 'none', md: 'table-cell' } : i === 4 ? { xs: 'none', sm: 'table-cell' } : 'table-cell',
                     }}
                   >
@@ -117,16 +176,18 @@ const UserManagement = () => {
                         <Avatar
                           sx={{
                             width: 32, height: 32, fontSize: '0.8rem', fontWeight: 800, flexShrink: 0,
+                            fontFamily: '"Fredoka", sans-serif',
                             background: user.role === 'admin'
-                              ? 'linear-gradient(135deg, #ef4444, #f97316)'
+                              ? 'linear-gradient(135deg, #ff5e7e, #fbbf24)'
                               : user.role === 'moderator'
-                              ? 'linear-gradient(135deg, #f59e0b, #ef4444)'
+                              ? 'linear-gradient(135deg, #fbbf24, #ff5e7e)'
                               : 'linear-gradient(135deg, #3b82f6, #10b981)',
+                            border: isDark ? '1.5px solid #ffffff' : '1.5px solid #0f172a',
                           }}
                         >
                           {user.name?.[0]?.toUpperCase() || 'U'}
                         </Avatar>
-                        <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, color: 'text.primary' }}>
+                        <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.85rem', fontWeight: 800, color: isDark ? '#ffffff' : '#0f172a' }}>
                           {user.name}
                         </Typography>
                       </Box>
@@ -145,11 +206,12 @@ const UserManagement = () => {
                         label={user.role}
                         size="small"
                         sx={{
-                          height: 22, fontSize: '0.68rem', fontWeight: 800,
+                          height: 22, fontSize: '0.65rem', fontWeight: 800,
+                          fontFamily: '"Fredoka", sans-serif',
                           bgcolor: roleStyle.bg, color: roleColor,
-                          border: `1px solid ${roleStyle.border}`,
+                          border: `1.5px solid ${roleStyle.border}`,
                           textTransform: 'capitalize', letterSpacing: '0.03em',
-                          '& .MuiChip-label': { px: 1 },
+                          '& .MuiChip-label': { px: 1.2 },
                         }}
                       />
                     </TableCell>
@@ -194,14 +256,18 @@ const UserManagement = () => {
                           size="small"
                           onClick={() => toggleUserStatus(user._id, user.isActive)}
                           sx={{
-                            width: 30, height: 30, borderRadius: '8px',
-                            bgcolor: user.isActive ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)',
-                            color:   user.isActive ? '#10b981' : '#ef4444',
-                            border:  user.isActive ? '1px solid rgba(16,185,129,0.20)' : '1px solid rgba(239,68,68,0.20)',
-                            transition: 'all 0.15s ease',
+                            width: 32, height: 32, borderRadius: '10px',
+                            bgcolor: user.isActive ? '#e6f9f3' : '#ffecf0',
+                            color:   user.isActive ? '#10b981' : '#ff5e7e',
+                            border:  isDark
+                              ? '1.5px solid #ffffff'
+                              : user.isActive ? '1.5px solid #10b981' : '1.5px solid #ff5e7e',
+                            transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             '&:hover': {
-                              bgcolor: user.isActive ? 'rgba(16,185,129,0.16)' : 'rgba(239,68,68,0.16)',
-                              transform: 'scale(1.08)',
+                              transform: 'translate(-1px, -1px)',
+                              boxShadow: isDark
+                                ? '2px 2px 0px 0px #ffffff'
+                                : user.isActive ? '2px 2px 0px 0px #10b981' : '2px 2px 0px 0px #ff5e7e',
                             },
                           }}
                         >
@@ -232,11 +298,13 @@ const UserManagement = () => {
           rowsPerPage={limit}
           rowsPerPageOptions={[limit]}
           sx={{
-            borderTop: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
-            '& .MuiTablePagination-selectLabel, & .MuiTablePagination-input': { fontWeight: 600 },
+            borderTop: isDark ? '2px solid #ffffff' : '2px solid #0f172a',
+            fontFamily: '"Quicksand", sans-serif',
+            fontWeight: 700,
+            '& .MuiTablePagination-selectLabel, & .MuiTablePagination-input': { fontWeight: 800, fontFamily: '"Quicksand", sans-serif' },
           }}
         />
-      </Paper>
+      </Box>
     </Box>
   );
 };
