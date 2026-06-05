@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   Box, Grid, Typography, Card, CardContent,
   Button, Chip, Fade, LinearProgress, Divider,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import EarthquakeIcon from '@mui/icons-material/Terrain';
 import WarningIcon    from '@mui/icons-material/Warning';
 import LayersIcon     from '@mui/icons-material/Layers';
 import VerifiedIcon   from '@mui/icons-material/Verified';
 import RefreshIcon    from '@mui/icons-material/Refresh';
+import AnalyticsIcon  from '@mui/icons-material/Analytics';
 import { fetchEarthquakes } from '../../features/earthquakes/earthquakeSlice';
 import RecentActivity from '../../components/dashboard/RecentActivity';
 import StatCard       from '../../components/dashboard/StatCard';
@@ -24,6 +27,9 @@ const getGreeting = () => {
 
 const UserDashboard = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const { earthquakes, total, loading } = useSelector((s) => s.earthquakes);
   const user = useSelector((s) => s.auth.user);
 
@@ -74,38 +80,119 @@ const UserDashboard = () => {
   return (
     <Box sx={{ p: 0.5 }}>
 
-      {/* ── Hero header ────────────────────────────────────────── */}
+      {/* ── Hero Banner Card ── */}
       <Box
         sx={{
+          p: 3.5,
           mb: 4,
+          borderRadius: '24px',
+          background: isDark ? '#2e2a1e' : '#fff4d2',
+          border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+          boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
           display: 'flex',
-          flexDirection: { xs: 'column', sm: 'row' },
-          alignItems:    { xs: 'flex-start', sm: 'flex-end' },
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'flex-start', md: 'center' },
           justifyContent: 'space-between',
-          gap: 2,
+          gap: 2.5,
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        {/* Left: greeting + status */}
-        <Box>
+        {/* Smiling Sun (Left side) */}
+        <Box
+          sx={{
+            position: { xs: 'relative', sm: 'absolute' },
+            left: { xs: 0, sm: 20 },
+            top: { xs: 0, sm: '50%' },
+            transform: { xs: 'none', sm: 'translateY(-50%)' },
+            width: 70,
+            height: 70,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1,
+            mr: { xs: 0, sm: 2 },
+            mb: { xs: 2, sm: 0 },
+          }}
+          className="float-slow"
+        >
+          <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
+            <path d="M35 5V11M35 59V65M5 35H11M59 35H65M13.8 13.8L18 18M52 52L56.2 56.2M13.8 56.2L18 52M52 18L56.2 13.8" stroke={isDark ? '#ffffff' : '#0f172a'} strokeWidth="3.5" strokeLinecap="round" />
+            <circle cx="35" cy="35" r="16" fill="#fbbf24" stroke={isDark ? '#ffffff' : '#0f172a'} strokeWidth="3.5" />
+            <circle cx="30" cy="32" r="2" fill={isDark ? '#ffffff' : '#0f172a'} />
+            <circle cx="40" cy="32" r="2" fill={isDark ? '#ffffff' : '#0f172a'} />
+            <path d="M29 38C31 41 39 41 41 38" stroke={isDark ? '#ffffff' : '#0f172a'} strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </Box>
+
+        {/* Fluffy Cloud (Center background/floating) */}
+        <Box
+          sx={{
+            position: 'absolute',
+            left: { xs: '80%', sm: '42%' },
+            top: '15%',
+            zIndex: 0,
+            pointerEvents: 'none',
+            opacity: { xs: 0.2, sm: 1 },
+          }}
+          className="float-medium"
+        >
+          <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+            <path d="M15 30C15 20 25 15 30 20C35 12 50 15 50 25C55 25 57 32 50 35C45 38 15 38 15 30Z" fill="#ffffff" stroke={isDark ? '#ffffff' : '#0f172a'} strokeWidth="3" strokeLinejoin="round" />
+          </svg>
+        </Box>
+
+        {/* Serpentine Ribbon (Right background) */}
+        <Box
+          sx={{
+            position: 'absolute',
+            right: 15,
+            top: '10%',
+            zIndex: 0,
+            pointerEvents: 'none',
+            opacity: { xs: 0.1, sm: 1 },
+          }}
+          className="float-fast"
+        >
+          <svg width="25" height="60" viewBox="0 0 25 60" fill="none">
+            <path d="M12 5C22 15 5 25 12 35C20 45 5 50 12 55" stroke="#fbbf24" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+          </svg>
+        </Box>
+
+        {/* Sparkle star near text */}
+        <Box
+          sx={{
+            position: 'absolute',
+            left: '60%',
+            top: '55%',
+            zIndex: 0,
+            pointerEvents: 'none',
+            display: { xs: 'none', sm: 'block' },
+          }}
+          className="float-medium"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5L12 2Z" fill="#fbbf24" stroke={isDark ? '#ffffff' : '#0f172a'} strokeWidth="2.5" />
+          </svg>
+        </Box>
+
+        <Box sx={{ position: 'relative', zIndex: 1, pl: { xs: 0, sm: 11 } }}>
           <Typography
             sx={{
-              fontFamily: '"Outfit", sans-serif',
+              fontFamily: '"Fredoka", sans-serif',
               fontWeight: 800,
-              fontSize: { xs: '1.6rem', sm: '2rem' },
+              fontSize: { xs: '1.6rem', sm: '2.1rem' },
               letterSpacing: '-0.03em',
-              color: 'text.primary',
-              lineHeight: 1.1,
-              mb: 0.5,
+              color: isDark ? '#ffffff' : '#0f172a',
+              lineHeight: 1.15,
+              mb: 0.8,
             }}
           >
             {getGreeting()},{' '}
             <Box
               component="span"
               sx={{
-                background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                color: '#ff5e7e',
               }}
             >
               {user?.name?.split(' ')[0] || 'User'}
@@ -113,58 +200,96 @@ const UserDashboard = () => {
           </Typography>
 
           {/* Live status line */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
             {isLive ? (
               <>
                 <Box
                   sx={{
-                    width: 7, height: 7, borderRadius: '50%', bgcolor: '#ef4444',
+                    width: 8, height: 8, borderRadius: '50%', bgcolor: '#ff5e7e',
+                    border: isDark ? '1px solid #ffffff' : '1px solid #0f172a',
                     animation: 'seismicPulse 2s ease-in-out infinite',
                     '@keyframes seismicPulse': {
-                      '0%':  { boxShadow: '0 0 0 0 rgba(239,68,68,0.55)' },
-                      '70%': { boxShadow: '0 0 0 7px rgba(239,68,68,0)' },
-                      '100%':{ boxShadow: '0 0 0 0 rgba(239,68,68,0)' },
+                      '0%':  { boxShadow: '0 0 0 0 rgba(255,94,126,0.6)' },
+                      '70%': { boxShadow: '0 0 0 7px rgba(255,94,126,0)' },
+                      '100%':{ boxShadow: '0 0 0 0 rgba(255,94,126,0)' },
                     },
                   }}
                 />
-                <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 500 }}>
-                  Live monitoring{' '}
-                  <Box component="span" sx={{ color: '#f87171', fontWeight: 700 }}>active</Box>
+                <Typography sx={{ fontSize: '0.8rem', color: isDark ? '#9ca3af' : '#475569', fontWeight: 800 }}>
+                  Telemetry Link:{' '}
+                  <Box component="span" sx={{ color: '#ff5e7e', fontWeight: 900 }}>ACTIVE</Box>
                   {' — '}updated at {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </Typography>
               </>
             ) : (
-              <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 500 }}>
-                Live monitoring{' '}
-                <Box component="span" sx={{ color: '#3f5068', fontWeight: 700 }}>paused</Box>
-              </Typography>
+              <>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: isDark ? '#6b7280' : '#94a3b8', border: isDark ? '1px solid #ffffff' : '1px solid #0f172a' }} />
+                <Typography sx={{ fontSize: '0.8rem', color: isDark ? '#9ca3af' : '#475569', fontWeight: 800 }}>
+                  Telemetry Link:{' '}
+                  <Box component="span" sx={{ color: isDark ? '#9ca3af' : '#475569', fontWeight: 900 }}>PAUSED</Box>
+                </Typography>
+              </>
             )}
           </Box>
         </Box>
 
-        {/* Right: controls */}
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+        {/* Right: Controls toolbar */}
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center', position: 'relative', zIndex: 2 }}>
           <Button
-            startIcon={<RefreshIcon sx={{ fontSize: 16 }} />}
+            startIcon={<RefreshIcon sx={{ fontSize: 15 }} />}
             variant="outlined"
             size="small"
             onClick={handleManualRefresh}
-            sx={{ fontSize: '0.78rem', px: 1.5, py: 0.6, height: 34 }}
+            sx={{
+              borderRadius: '14px',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              fontFamily: '"Fredoka", sans-serif',
+              px: 2.5,
+              py: 1.1,
+              textTransform: 'none',
+              borderColor: isDark ? '#ffffff' : '#0f172a',
+              borderWidth: '2.5px !important',
+              color: isDark ? '#ffffff' : '#0f172a',
+              backgroundColor: isDark ? '#161a2b' : '#ffffff',
+              boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+              '&:hover': {
+                borderColor: isDark ? '#ffffff' : '#0f172a',
+                backgroundColor: isDark ? '#2e1b23' : '#ffecf0',
+                transform: 'translate(-2px, -2px)',
+                boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
+              },
+              transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            }}
           >
-            Refresh
+            Refresh Feed
           </Button>
           <Button
-            variant={isLive ? 'contained' : 'outlined'}
+            variant="contained"
             size="small"
             onClick={() => setIsLive(!isLive)}
             sx={{
-              fontSize: '0.78rem', px: 1.5, py: 0.6, height: 34,
-              ...(isLive
-                ? { background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.30)', boxShadow: 'none', '&:hover': { background: 'rgba(239,68,68,0.18)', boxShadow: 'none' } }
-                : {}),
+              borderRadius: '14px',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              fontFamily: '"Fredoka", sans-serif',
+              px: 2.5,
+              py: 1.1,
+              textTransform: 'none',
+              border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+              backgroundColor: '#ff5e7e',
+              color: '#ffffff',
+              boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+              '&:hover': {
+                backgroundColor: '#e03f60',
+                borderColor: isDark ? '#ffffff' : '#0f172a',
+                transform: 'translate(-2px, -2px)',
+                boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
+              },
+              transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
             }}
           >
-            {isLive ? 'Stop Live' : 'Start Live'}
+            {isLive ? 'Stop Real-time' : 'Start Real-time'}
           </Button>
         </Box>
       </Box>
@@ -189,13 +314,13 @@ const UserDashboard = () => {
             title: 'Critical Events (M6+)',
             value: globalStats.highMag,
             icon:  <WarningIcon />,
-            color: '#ef4444',
+            color: '#ff5e7e',
           },
           {
             title: 'Deep Source Events',
             value: globalStats.deep,
             icon:  <LayersIcon />,
-            color: '#f59e0b',
+            color: '#fbbf24',
           },
           {
             title: 'Verified Reports',
@@ -217,37 +342,46 @@ const UserDashboard = () => {
       </Grid>
 
       {/* ── Main content area ───────────────────────────────────── */}
-      <Grid container spacing={2.5}>
+      <Grid container spacing={3.5}>
 
         {/* Real-time feed */}
         <Grid item xs={12} lg={8}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
+          <Card
+            sx={{
+              height: '100%',
+              borderColor: isDark ? '#ffffff !important' : '#8b5cf6 !important',
+              boxShadow: isDark ? '4px 4px 0px 0px #ffffff !important' : '4px 4px 0px 0px #0f172a !important',
+            }}
+          >
+            <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
               {/* Section header */}
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2.5 }}>
-                <Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography
                     sx={{
-                      fontFamily: '"Outfit", sans-serif',
-                      fontWeight: 700, fontSize: '1rem',
+                      fontFamily: '"Fredoka", sans-serif',
+                      fontWeight: 800, fontSize: '1.2rem',
                       color: 'text.primary', letterSpacing: '-0.01em',
                     }}
                   >
-                    Real-time Seismic Feed
+                    Seismic Telemetry Feed
                   </Typography>
-                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary', mt: 0.2, fontWeight: 500 }}>
-                    Latest 5 events sorted by time
-                  </Typography>
+                  {/* Floating star */}
+                  <Box className="float-slow" sx={{ display: 'inline-flex', ml: 0.5 }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#ff5e7e" strokeWidth="2.5" fill="none" />
+                    </svg>
+                  </Box>
                 </Box>
                 <Chip
-                  label="Live"
+                  label="LIVE TELEMETRY"
                   size="small"
                   sx={{
                     height: 22, fontSize: '0.65rem', fontWeight: 800,
-                    background: isLive ? 'rgba(239,68,68,0.10)' : 'rgba(255,255,255,0.05)',
-                    color: isLive ? '#f87171' : '#3f5068',
-                    border: isLive ? '1px solid rgba(239,68,68,0.25)' : '1px solid rgba(255,255,255,0.06)',
-                    '& .MuiChip-label': { px: 1 },
+                    background: isLive ? '#ffecf0' : 'rgba(100,116,139,0.08)',
+                    color: isLive ? '#ff5e7e' : '#64748b',
+                    border: `1.5px solid ${isLive ? '#ff5e7e' : 'rgba(100,116,139,0.2)'}`,
+                    '& .MuiChip-label': { px: 1.2 },
                   }}
                 />
               </Box>
@@ -263,19 +397,33 @@ const UserDashboard = () => {
 
         {/* System status panel */}
         <Grid item xs={12} lg={4}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
-              <Typography
-                sx={{
-                  fontFamily: '"Outfit", sans-serif',
-                  fontWeight: 700, fontSize: '1rem',
-                  color: 'text.primary', letterSpacing: '-0.01em', mb: 0.3,
-                }}
-              >
-                System Status
-              </Typography>
-              <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary', fontWeight: 500, mb: 2.5 }}>
-                Infrastructure & data pipeline health
+          <Card
+            sx={{
+              height: '100%',
+              borderColor: isDark ? '#ffffff !important' : '#fbbf24 !important',
+              boxShadow: isDark ? '4px 4px 0px 0px #ffffff !important' : '4px 4px 0px 0px #0f172a !important',
+            }}
+          >
+            <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                <Typography
+                  sx={{
+                    fontFamily: '"Fredoka", sans-serif',
+                    fontWeight: 800, fontSize: '1.2rem',
+                    color: 'text.primary', letterSpacing: '-0.01em',
+                  }}
+                >
+                  System Status
+                </Typography>
+                {/* Floating star */}
+                <Box className="float-medium" sx={{ display: 'inline-flex', ml: 0.5 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#ff5e7e" strokeWidth="2.5" fill="none" />
+                  </svg>
+                </Box>
+              </Box>
+              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 600, mb: 3 }}>
+                Infrastructure & telemetry pipeline health
               </Typography>
 
               <Divider sx={{ mb: 2.5 }} />
@@ -285,34 +433,45 @@ const UserDashboard = () => {
                 {
                   label: 'MongoDB Connection',
                   status: 'Stable',
-                  color: '#34d399', bg: 'rgba(52,211,153,0.10)', border: 'rgba(52,211,153,0.25)',
-                  dot: '#10b981',
+                  color: '#10b981', bg: '#e6f9f3', border: '#10b981',
+                  pulseColor: '#10b981',
                 },
                 {
                   label: 'Data Sync Mode',
-                  status: isLive ? 'Live' : 'Manual',
-                  color: isLive ? '#f87171' : '#7a8ea6',
-                  bg:     isLive ? 'rgba(248,113,113,0.10)' : 'rgba(122,142,166,0.10)',
-                  border: isLive ? 'rgba(248,113,113,0.25)' : 'rgba(122,142,166,0.20)',
-                  dot:    isLive ? '#ef4444' : '#4b5e74',
+                  status: isLive ? 'Real-time' : 'Manual',
+                  color: isLive ? '#ff5e7e' : '#475569',
+                  bg:     isLive ? '#ffecf0' : 'rgba(100,116,139,0.08)',
+                  border: isLive ? '#ff5e7e' : 'rgba(100,116,139,0.2)',
+                  pulseColor: isLive ? '#ff5e7e' : '#475569',
                 },
                 {
-                  label: 'USGS API',
+                  label: 'USGS API Link',
                   status: 'Connected',
-                  color: '#60a5fa', bg: 'rgba(96,165,250,0.10)', border: 'rgba(96,165,250,0.25)',
-                  dot: '#3b82f6',
+                  color: '#3b82f6', bg: '#e6f0ff', border: '#3b82f6',
+                  pulseColor: '#3b82f6',
                 },
               ].map((row, i) => (
                 <Box
                   key={i}
                   sx={{
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    mb: i < 2 ? 1.8 : 0,
+                    mb: i < 2 ? 2.5 : 0,
                   }}
                 >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: row.dot, flexShrink: 0 }} />
-                    <Typography sx={{ fontSize: '0.78rem', fontWeight: 500, color: 'text.secondary' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+                    <Box
+                      sx={{
+                        width: 8, height: 8, borderRadius: '50%', bgcolor: row.pulseColor,
+                        border: isDark ? '1px solid #ffffff' : '1px solid #0f172a',
+                        animation: 'healthPulse 2s infinite',
+                        '@keyframes healthPulse': {
+                          '0%': { boxShadow: `0 0 0 0 ${row.pulseColor}77` },
+                          '70%': { boxShadow: `0 0 0 5px ${row.pulseColor}00` },
+                          '100%': { boxShadow: `0 0 0 0 ${row.pulseColor}00` },
+                        }
+                      }}
+                    />
+                    <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.82rem', fontWeight: 800, color: 'text.secondary' }}>
                       {row.label}
                     </Typography>
                   </Box>
@@ -320,10 +479,10 @@ const UserDashboard = () => {
                     label={row.status}
                     size="small"
                     sx={{
-                      height: 20, fontSize: '0.62rem', fontWeight: 800,
+                      height: 22, fontSize: '0.65rem', fontWeight: 800,
                       background: row.bg, color: row.color,
-                      border: `1px solid ${row.border}`,
-                      '& .MuiChip-label': { px: 1 },
+                      border: `1.5px solid ${row.border}`,
+                      '& .MuiChip-label': { px: 1.2 },
                     }}
                   />
                 </Box>
@@ -331,33 +490,33 @@ const UserDashboard = () => {
 
               <Divider sx={{ my: 2.5 }} />
 
-              {/* Records count */}
-              <Box
+              {/* Records count Console Box -> View System Analytics Button */}
+              <Button
+                onClick={() => navigate('/analytics')}
+                variant="contained"
+                startIcon={<AnalyticsIcon />}
                 sx={{
-                  p: 1.5, borderRadius: '12px',
-                  background: (theme) => theme.palette.mode === 'dark'
-                    ? 'rgba(139,92,246,0.07)'
-                    : 'rgba(139,92,246,0.04)',
-                  border: '1px solid rgba(139,92,246,0.15)',
+                  width: '100%',
+                  borderRadius: '14px',
+                  border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+                  boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+                  background: '#8b5cf6',
+                  color: '#ffffff',
+                  py: 1.2,
+                  fontFamily: '"Fredoka", sans-serif',
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  '&:hover': {
+                    background: '#7c3aed',
+                    borderColor: isDark ? '#ffffff' : '#0f172a',
+                    transform: 'translate(-2px, -2px)',
+                    boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
+                  },
+                  transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 }}
               >
-                <Typography sx={{ fontSize: '0.68rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7c5cbf', mb: 0.5 }}>
-                  Total Records
-                </Typography>
-                <Typography
-                  sx={{
-                    fontFamily: '"Outfit", sans-serif',
-                    fontWeight: 800, fontSize: '1.6rem',
-                    color: (theme) => theme.palette.mode === 'dark' ? '#a78bfa' : '#7c3aed',
-                    letterSpacing: '-0.03em', lineHeight: 1,
-                  }}
-                >
-                  {total?.toLocaleString() ?? '—'}
-                </Typography>
-                <Typography sx={{ fontSize: '0.68rem', color: (theme) => theme.palette.mode === 'dark' ? '#4b3d73' : '#9ca3af', fontWeight: 500, mt: 0.3 }}>
-                  earthquake entries in database
-                </Typography>
-              </Box>
+                View System Analytics
+              </Button>
             </CardContent>
           </Card>
         </Grid>
