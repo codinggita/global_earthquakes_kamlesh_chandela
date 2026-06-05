@@ -18,7 +18,7 @@ const Layout = () => {
         display: 'flex', 
         minHeight: '100vh', 
         backgroundColor: 'background.default',
-        overflow: 'hidden' // Prevent global scroll, we'll scroll the content area
+        overflow: 'hidden'
       }}
     >
       <Sidebar open={mobileOpen} onClose={() => setMobileOpen(false)} />
@@ -29,7 +29,7 @@ const Layout = () => {
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          width: { xs: '100%', md: 'calc(100% - 240px)' }, // Sidebar is 240px
+          width: { xs: '100%', md: 'calc(100% - 288px)' }, // Sidebar is 256px + 32px margins
           height: '100vh',
           overflowY: 'auto',
           overflowX: 'hidden',
