@@ -40,28 +40,40 @@ const Login = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isDark ? '#090c15' : '#f5f7fb',
+        background: isDark ? '#0e111d' : '#fdfbf7',
         backgroundImage: isDark
-          ? `radial-gradient(ellipse at 20% 20%, rgba(239,68,68,0.12) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(249,115,22,0.08) 0%, transparent 55%)`
-          : `radial-gradient(ellipse at 20% 20%, rgba(239,68,68,0.06) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(249,115,22,0.03) 0%, transparent 55%)`,
+          ? `radial-gradient(circle at 15% 15%, #2e1b23 0%, transparent 50%), radial-gradient(circle at 85% 85%, #1a233b 0%, transparent 50%)`
+          : `radial-gradient(circle at 15% 15%, #ffecf0 0%, transparent 50%), radial-gradient(circle at 85% 85%, #e6f0ff 0%, transparent 50%)`,
         p: 2,
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {/* Floating stars */}
+      <Box sx={{ position: 'absolute', left: '10%', top: '20%', zIndex: 1, pointerEvents: 'none' }} className="float-slow">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#fbbf24" stroke="#0f172a" strokeWidth="2.5" />
+        </svg>
+      </Box>
+      <Box sx={{ position: 'absolute', right: '12%', bottom: '25%', zIndex: 1, pointerEvents: 'none' }} className="float-medium">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#ff5e7e" stroke="#0f172a" strokeWidth="2.5" />
+        </svg>
+      </Box>
+
       {/* Card */}
       <Box
         sx={{
           width: '100%',
           maxWidth: 420,
-          background: isDark ? 'rgba(15, 19, 34, 0.85)' : 'rgba(255, 255, 255, 0.85)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid',
-          borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.07)',
+          background: isDark ? '#161a2b' : '#ffffff',
+          border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
           borderRadius: '24px',
-          p: { xs: 3, sm: 4 },
-          boxShadow: isDark
-            ? '0 24px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(239,68,68,0.05)'
-            : '0 24px 80px rgba(239,68,68,0.06), 0 0 0 1px rgba(239,68,68,0.02)',
-          animation: 'fadeSlideUp 0.4s cubic-bezier(0.4,0,0.2,1) both',
+          p: { xs: 3.5, sm: 4.5 },
+          boxShadow: isDark ? '6px 6px 0px 0px #ffffff' : '6px 6px 0px 0px #0f172a',
+          position: 'relative',
+          zIndex: 2,
+          animation: 'fadeSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both',
           '@keyframes fadeSlideUp': {
             from: { opacity: 0, transform: 'translateY(20px)' },
             to:   { opacity: 1, transform: 'translateY(0)' },
@@ -72,32 +84,33 @@ const Login = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3.5 }}>
           <Box
             sx={{
-              width: 52,
-              height: 52,
+              width: 54,
+              height: 54,
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
+              background: '#ff5e7e',
+              border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+              boxShadow: isDark ? '2.5px 2.5px 0px 0px #ffffff' : '2.5px 2.5px 0px 0px #0f172a',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(239,68,68,0.25)',
-              mb: 2,
+              mb: 2.5,
             }}
           >
-            <TerrainIcon sx={{ color: '#fff', fontSize: 26 }} />
+            <TerrainIcon sx={{ color: '#fff', fontSize: 28 }} />
           </Box>
           <Typography
             sx={{
-              fontFamily: '"Outfit", sans-serif',
-              fontWeight: 900,
-              fontSize: '1.4rem',
-              letterSpacing: '-0.025em',
-              color: 'text.primary',
+              fontFamily: '"Fredoka", sans-serif',
+              fontWeight: 800,
+              fontSize: '1.6rem',
+              letterSpacing: '-0.02em',
+              color: isDark ? '#ffffff' : '#0f172a',
               lineHeight: 1.2,
             }}
           >
             Welcome back
           </Typography>
-          <Typography sx={{ fontSize: '0.82rem', color: 'text.secondary', mt: 0.5, fontWeight: 500 }}>
+          <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.82rem', color: isDark ? '#9ca3af' : '#475569', mt: 0.5, fontWeight: 700 }}>
             Sign in to Earthquake Analytics Platform
           </Typography>
         </Box>
@@ -106,7 +119,7 @@ const Login = () => {
         {error && (
           <Alert
             severity="error"
-            sx={{ mb: 2.5, borderRadius: '12px', fontSize: '0.82rem' }}
+            sx={{ mb: 2.5 }}
           >
             {error}
           </Alert>
@@ -123,14 +136,8 @@ const Login = () => {
             onChange={handleChange}
             required
             sx={{
-              mb: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '11px',
-                '& fieldset': { borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.10)' },
-                '&:hover fieldset': { borderColor: 'rgba(239,68,68,0.40)' },
-                '&.Mui-focused fieldset': { borderColor: '#ef4444' },
-              },
-              '& .MuiInputLabel-root.Mui-focused': { color: '#ef4444' }
+              mb: 2.5,
+              '& .MuiInputLabel-root.Mui-focused': { color: '#ff5e7e' }
             }}
             InputProps={{
               startAdornment: (
@@ -149,14 +156,8 @@ const Login = () => {
             onChange={handleChange}
             required
             sx={{
-              mb: 3,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '11px',
-                '& fieldset': { borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.10)' },
-                '&:hover fieldset': { borderColor: 'rgba(239,68,68,0.40)' },
-                '&.Mui-focused fieldset': { borderColor: '#ef4444' },
-              },
-              '& .MuiInputLabel-root.Mui-focused': { color: '#ef4444' }
+              mb: 3.5,
+              '& .MuiInputLabel-root.Mui-focused': { color: '#ff5e7e' }
             }}
             InputProps={{
               startAdornment: (
@@ -180,18 +181,22 @@ const Login = () => {
             size="large"
             disabled={loading}
             sx={{
-              py: 1.4,
-              fontSize: '0.9rem',
+              py: 1.3,
+              fontSize: '0.92rem',
               fontWeight: 800,
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
-              boxShadow: '0 4px 20px rgba(239,68,68,0.25)',
+              fontFamily: '"Fredoka", sans-serif',
+              borderRadius: '14px',
+              border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+              background: '#ff5e7e',
               color: '#ffffff',
+              boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
               '&:hover': {
-                background: 'linear-gradient(135deg, #dc2626 0%, #ea580c 100%)',
-                boxShadow: '0 6px 28px rgba(239,68,68,0.4)',
-                transform: 'translateY(-1px)',
+                background: '#e03f60',
+                borderColor: isDark ? '#ffffff' : '#0f172a',
+                transform: 'translate(-2px, -2px)',
+                boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
               },
+              transition: 'all 0.18s ease',
             }}
           >
             {loading ? <CircularProgress size={22} sx={{ color: '#fff' }} /> : 'Sign In'}
@@ -199,15 +204,15 @@ const Login = () => {
         </form>
 
         {/* Links */}
-        <Box sx={{ mt: 2.5, textAlign: 'center' }}>
-          <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
+        <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.84rem', color: isDark ? '#9ca3af' : '#475569', fontWeight: 700 }}>
             Don't have an account?{' '}
-            <Link to="/register" style={{ color: '#ef4444', fontWeight: 700, textDecoration: 'none' }}>
+            <Link to="/register" style={{ color: '#ff5e7e', fontWeight: 800, textDecoration: 'none' }}>
               Register
             </Link>
           </Typography>
-          <Typography sx={{ fontSize: '0.78rem', color: 'text.secondary', mt: 0.8 }}>
-            <Link to="/forgot-password" style={{ color: '#64748b', fontWeight: 600, textDecoration: 'none' }}>
+          <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.8rem', color: 'text.secondary', mt: 1, fontWeight: 700 }}>
+            <Link to="/forgot-password" style={{ color: isDark ? '#9ca3af' : '#475569', fontWeight: 700, textDecoration: 'none' }}>
               Forgot password?
             </Link>
           </Typography>
