@@ -18,48 +18,99 @@ import EarthquakeTable from '../../components/earthquakes/EarthquakeTable';
 import EarthquakeFilters from '../../components/earthquakes/EarthquakeFilters';
 import api from '../../services/api';
 
+/* ── Mini stat card doodles ─────────────────────────────────── */
+const StarDoodle = () => (
+  <Box sx={{ position: 'absolute', right: 12, bottom: 8, opacity: 0.85, pointerEvents: 'none' }} className="float-slow">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#ff5e7e" strokeWidth="2.5" strokeLinejoin="round" fill="none" />
+    </svg>
+  </Box>
+);
+
+const LoopDoodle = () => (
+  <Box sx={{ position: 'absolute', right: 12, bottom: 8, opacity: 0.85, pointerEvents: 'none' }} className="float-medium">
+    <svg width="20" height="20" viewBox="0 0 30 30" fill="none">
+      <path d="M5 25C15 25 15 5 20 15C25 25 25 5 28 10" stroke="#10b981" strokeWidth="3" strokeLinecap="round" fill="none" />
+    </svg>
+  </Box>
+);
+
+const SquiggleDoodle = () => (
+  <Box sx={{ position: 'absolute', right: 12, bottom: 8, opacity: 0.85, pointerEvents: 'none' }} className="float-fast">
+    <svg width="20" height="20" viewBox="0 0 30 30" fill="none">
+      <path d="M5 15C10 10 15 20 20 10C25 5 25 25 28 15" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" fill="none" />
+    </svg>
+  </Box>
+);
+
+const StripesDoodle = () => (
+  <Box sx={{ position: 'absolute', right: 12, bottom: 8, opacity: 0.85, pointerEvents: 'none' }} className="float-medium">
+    <svg width="20" height="20" viewBox="0 0 30 30" fill="none">
+      <path d="M5 22L18 8M12 24L25 10M20 26L28 18" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" fill="none" />
+    </svg>
+  </Box>
+);
+
 /* ── Mini stat card ─────────────────────────────────────────── */
 const MiniStat = ({ label, value, icon, color, loading }) => {
   const theme  = useTheme();
   const isDark = theme.palette.mode === 'dark';
+
+  // Playful Neubrutal colors mapping based on label
+  let cardBg = isDark ? '#2e1b23' : '#ffe6eb'; // default Pink
+  let accentColor = '#ff5e7e';
+  let doodle = <StarDoodle />;
+
+  if (label.toLowerCase().includes('critical')) {
+    cardBg = isDark ? '#162a26' : '#e6f9f3'; // Green
+    accentColor = '#10b981';
+    doodle = <LoopDoodle />;
+  } else if (label.toLowerCase().includes('deep')) {
+    cardBg = isDark ? '#2e2a1e' : '#fff4d2'; // Yellow
+    accentColor = '#fbbf24';
+    doodle = <SquiggleDoodle />;
+  } else if (label.toLowerCase().includes('verified')) {
+    cardBg = isDark ? '#1a233b' : '#e6f0ff'; // Blue
+    accentColor = '#3b82f6';
+    doodle = <StripesDoodle />;
+  }
+
   return (
     <Box
       sx={{
         p: 2.2,
-        borderRadius: '14px',
+        borderRadius: '16px',
         height: '100%',
-        background: isDark ? 'rgba(10,16,30,0.94)' : 'rgba(255,255,255,0.94)',
-        border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.07)',
-        borderLeft: `3px solid ${color}`,
-        backdropFilter: 'blur(12px)',
+        background: cardBg,
+        border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
         position: 'relative',
         overflow: 'hidden',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
         cursor: 'default',
+        boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
         '&:hover': {
-          transform: 'translateY(-3px)',
+          transform: 'translateY(-2px)',
           boxShadow: isDark
-            ? `0 10px 30px rgba(0,0,0,0.4), 0 0 0 1px ${color}22`
-            : `0 10px 30px rgba(0,0,0,0.07), 0 0 0 1px ${color}18`,
+            ? '4px 4px 0px 0px #ffffff'
+            : '4px 4px 0px 0px #0f172a',
         },
       }}
     >
-      {/* Ambient orb */}
-      <Box sx={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80, borderRadius: '50%', background: color, opacity: isDark ? 0.07 : 0.05, filter: 'blur(16px)', pointerEvents: 'none' }} />
+      {doodle}
 
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
-        <Typography sx={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase', color: isDark ? '#3f5068' : '#9ca3af' }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2, position: 'relative', zIndex: 2 }}>
+        <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase', color: isDark ? '#ffffff' : '#0f172a' }}>
           {label}
         </Typography>
-        <Box sx={{ p: 0.8, borderRadius: '8px', background: `${color}14`, color, display: 'flex', alignItems: 'center', '& .MuiSvgIcon-root': { fontSize: '16px !important' } }}>
+        <Box sx={{ p: 0.6, borderRadius: '8px', background: '#ffffff', color: accentColor, border: isDark ? '1.5px solid #ffffff' : '1.5px solid #0f172a', display: 'flex', alignItems: 'center', '& .MuiSvgIcon-root': { fontSize: '15px !important' } }}>
           {icon}
         </Box>
       </Box>
 
       {loading ? (
-        <Box sx={{ width: 80, height: 32, borderRadius: '8px', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', animation: 'shimmer 1.6s ease-in-out infinite', '@keyframes shimmer': { '0%': { opacity: 0.4 }, '50%': { opacity: 0.8 }, '100%': { opacity: 0.4 } } }} />
+        <Box sx={{ width: 80, height: 32, borderRadius: '8px', background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)', animation: 'shimmer 1.6s ease-in-out infinite' }} />
       ) : (
-        <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: '2rem', lineHeight: 1, letterSpacing: '-0.04em', color: isDark ? '#f1f5f9' : '#0f172a' }}>
+        <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '2.1rem', lineHeight: 1, letterSpacing: '-0.03em', color: isDark ? '#ffffff' : '#0f172a', position: 'relative', zIndex: 2 }}>
           {typeof value === 'number' ? value.toLocaleString() : (value ?? '—')}
         </Typography>
       )}
@@ -80,8 +131,10 @@ const EarthquakeList = () => {
   const [syncing,  setSyncing]  = useState(false);
   const [globalStats, setGlobalStats] = useState({ highMag: 0, deep: 0, reviewed: 0 });
   const [statsLoading, setStatsLoading] = useState(true);
+  // Local limit state so the dropdown never snaps back while waiting for the API response
+  const [localLimit, setLocalLimit] = useState(pagination.limit);
 
-  useEffect(() => { fetchData(); }, [pagination.page, pagination.limit, sort, filters]);
+  useEffect(() => { fetchData(); }, [pagination.page, localLimit, sort, filters]);
 
   useEffect(() => {
     const fetchGlobalStats = async () => {
@@ -104,7 +157,7 @@ const EarthquakeList = () => {
   }, []);
 
   const fetchData = () => {
-    const params = { page: pagination.page, limit: pagination.limit, sort, ...filters };
+    const params = { page: pagination.page, limit: localLimit, sort, ...filters };
     Object.keys(params).forEach(k => {
       if (params[k] === undefined || params[k] === null || params[k] === '') delete params[k];
     });
@@ -129,7 +182,8 @@ const EarthquakeList = () => {
   };
 
   const handlePageChange   = (page)  => dispatch(setPage(page));
-  const handleLimitChange  = (limit) => { dispatch(setFilters({ limit })); dispatch(setPage(1)); };
+  // Use local state so the rows-per-page dropdown updates immediately without waiting for API
+  const handleLimitChange  = (limit) => { setLocalLimit(limit); dispatch(setPage(1)); };
   const handleFilterChange = (key, value) => { dispatch(setFilters({ [key]: value })); dispatch(setPage(1)); };
   const handleResetFilters = () => { dispatch(resetFilters()); dispatch(setPage(1)); };
 
@@ -148,10 +202,10 @@ const EarthquakeList = () => {
       {/* ── Page header ─────────────────────────────────────── */}
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 2, mb: 3.5 }}>
         <Box>
-          <Typography sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: { xs: '1.5rem', sm: '1.8rem' }, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}>
+          <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: { xs: '1.5rem', sm: '1.8rem' }, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}>
             Earthquake Records
           </Typography>
-          <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 500, mt: 0.4 }}>
+          <Typography sx={{ fontFamily: '"Quicksand", sans-serif', fontSize: '0.82rem', color: 'text.secondary', fontWeight: 700, mt: 0.4 }}>
             Monitor and manage global seismic events
           </Typography>
         </Box>
@@ -164,15 +218,25 @@ const EarthquakeList = () => {
               onClick={handleSync}
               disabled={syncing}
               sx={{
-                borderRadius: 3, px: 2.5, py: 0.9, fontSize: '0.82rem', fontWeight: 700,
+                borderRadius: '14px', px: 2.5, py: 1, fontSize: '0.82rem', fontWeight: 800,
+                fontFamily: '"Fredoka", sans-serif',
                 textTransform: 'none', flexGrow: { xs: 1, sm: 0 },
-                borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)',
-                color: 'text.secondary',
-                '&:hover': { borderColor: '#8b5cf6', color: '#8b5cf6', bgcolor: 'rgba(139,92,246,0.04)' },
+                borderColor: isDark ? '#ffffff' : '#0f172a',
+                borderWidth: '2.5px !important',
+                color: isDark ? '#ffffff' : '#0f172a',
+                backgroundColor: isDark ? '#161a2b' : '#ffffff',
+                boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+                '&:hover': {
+                  borderColor: isDark ? '#ffffff' : '#0f172a',
+                  backgroundColor: isDark ? '#2e1b23' : '#ffecf0',
+                  transform: 'translate(-2px, -2px)',
+                  boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
+                },
                 '&.Mui-disabled': {
-                  borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+                  borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
                   color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-                }
+                },
+                transition: 'all 0.18s ease',
               }}
             >
               {syncing ? 'Syncing...' : 'Sync USGS'}
@@ -184,11 +248,20 @@ const EarthquakeList = () => {
               startIcon={<AddIcon />}
               onClick={() => navigate('/earthquakes/create')}
               sx={{
-                borderRadius: 3, px: 2.5, py: 0.9, fontSize: '0.82rem', fontWeight: 700,
+                borderRadius: '14px', px: 2.5, py: 1, fontSize: '0.82rem', fontWeight: 800,
+                fontFamily: '"Fredoka", sans-serif',
                 textTransform: 'none', flexGrow: { xs: 1, sm: 0 },
-                background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
-                boxShadow: '0 4px 16px rgba(239,68,68,0.25)',
-                '&:hover': { background: 'linear-gradient(135deg, #dc2626 0%, #ea580c 100%)', transform: 'translateY(-1px)', boxShadow: '0 6px 20px rgba(239,68,68,0.35)' },
+                border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+                backgroundColor: '#ff5e7e',
+                color: '#ffffff',
+                boxShadow: isDark ? '3px 3px 0px 0px #ffffff' : '3px 3px 0px 0px #0f172a',
+                '&:hover': {
+                  backgroundColor: '#e03f60',
+                  borderColor: isDark ? '#ffffff' : '#0f172a',
+                  transform: 'translate(-2px, -2px)',
+                  boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
+                },
+                transition: 'all 0.18s ease',
               }}
             >
               Add Event
@@ -209,7 +282,7 @@ const EarthquakeList = () => {
       {/* ── Filters + Table ─────────────────────────────────── */}
       <EarthquakeFilters filters={filters} onFilterChange={handleFilterChange} onReset={handleResetFilters} />
       <EarthquakeTable
-        earthquakes={earthquakes} page={pagination.page} limit={pagination.limit} total={total}
+        earthquakes={earthquakes} page={pagination.page} limit={localLimit} total={total}
         onPageChange={handlePageChange} onLimitChange={handleLimitChange}
         onView={(id) => navigate('/earthquakes/' + id)} onEdit={(id) => navigate('/earthquakes/' + id + '/edit')}
         onDelete={(id) => setDeleteId(id)} loading={loading}
