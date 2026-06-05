@@ -86,44 +86,50 @@ const EarthquakeForm = ({ initialData, onSubmit, loading }) => {
     onSubmit(processedData);
   };
 
+  const fieldSx = {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '12px',
+      fontSize: '0.88rem',
+      fontFamily: '"Quicksand", sans-serif',
+      fontWeight: 700,
+      background: isDark ? 'rgba(255,255,255,0.04)' : '#ffffff',
+      '& fieldset': {
+        borderColor: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(15,23,42,0.35)',
+        borderWidth: '1.8px',
+        display: 'block !important',
+      },
+      '&:hover fieldset': {
+        borderColor: '#ff5e7e',
+        borderWidth: '2px',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#ff5e7e',
+        borderWidth: '2px',
+        boxShadow: '2px 2px 0px 0px #ff5e7e',
+      },
+    },
+    '& .MuiInputLabel-root': {
+      fontFamily: '"Quicksand", sans-serif',
+      fontWeight: 700,
+      fontSize: '0.88rem',
+      '&.Mui-focused': { color: '#ff5e7e' },
+    },
+  };
+
   return (
     <Box
       sx={{
         p: 4,
         borderRadius: '20px',
-        background: isDark ? 'rgba(10,16,30,0.7)' : 'rgba(255,255,255,0.7)',
-        border: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(148,163,184,0.12)',
-        backdropFilter: 'blur(16px)',
-        boxShadow: isDark ? '0 10px 40px rgba(0,0,0,0.3)' : '0 10px 40px rgba(0,0,0,0.04)',
-        // Override child inputs for premium unified look
-        '& .MuiOutlinedInput-root': {
-          borderRadius: '11px',
-          fontSize: '0.88rem',
-          background: isDark ? 'rgba(255,255,255,0.015)' : 'rgba(0,0,0,0.01)',
-          transition: 'all 0.2s ease',
-          '& fieldset': {
-            borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.12)',
-          },
-          '&:hover fieldset': {
-            borderColor: isDark ? 'rgba(255,255,255,0.16)' : 'rgba(0,0,0,0.22)',
-          },
-          '&.Mui-focused fieldset': {
-            borderColor: '#ef4444',
-            borderWidth: '1.5px',
-          },
-        },
-        '& .MuiInputLabel-root': {
-          fontSize: '0.88rem',
-          '&.Mui-focused': {
-            color: '#ef4444',
-          }
-        }
+        background: isDark ? '#161a2b' : '#ffffff',
+        border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+        boxShadow: isDark ? '6px 6px 0px 0px #ffffff' : '6px 6px 0px 0px #0f172a',
       }}
     >
-      <Typography variant="h6" sx={{ fontFamily: '"Outfit", sans-serif', fontWeight: 800, color: 'text.primary', mb: 1, letterSpacing: '-0.02em' }}>
+      <Typography variant="h6" sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, color: 'text.primary', mb: 1, letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
         {initialData ? 'Edit Earthquake Event' : 'Record New Seismic Event'}
       </Typography>
-      <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', fontWeight: 500, mb: 3.5 }}>
+      <Typography sx={{ fontSize: '0.82rem', color: 'text.secondary', fontWeight: 700, fontFamily: '"Quicksand", sans-serif', mb: 3.5 }}>
         Enter official USGS parameters to register or update the seismic event
       </Typography>
       
@@ -132,90 +138,110 @@ const EarthquakeForm = ({ initialData, onSubmit, loading }) => {
 
           {/* Required Fields Section */}
           <Grid item xs={12}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <LocationOnIcon color="primary" sx={{ fontSize: 18 }} />
-              <Typography variant="subtitle2" color="primary" fontWeight="700" sx={{ letterSpacing: '0.02em' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, mb: 0.5 }}>
+              <Box
+                sx={{
+                  p: 0.8, borderRadius: '10px',
+                  background: isDark ? '#2e1b23' : '#ffecf0',
+                  color: '#ff5e7e',
+                  border: '1.5px solid #ff5e7e',
+                  display: 'flex', alignItems: 'center',
+                }}
+              >
+                <LocationOnIcon sx={{ fontSize: 16 }} />
+              </Box>
+              <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '0.9rem', color: '#ff5e7e', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
                 Required Parameters
               </Typography>
             </Box>
           </Grid>
 
           <Grid item xs={12} sm={4}>
-            <Input label="Date & Time *" name="time" type="datetime-local" value={formData.time} onChange={handleChange} required InputLabelProps={{ shrink: true }} />
+            <Input label="Date & Time *" name="time" type="datetime-local" value={formData.time} onChange={handleChange} required InputLabelProps={{ shrink: true }} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={5}>
-            <Input label="Place / Location *" name="place" value={formData.place} onChange={handleChange} required helperText="Format: 'City, Country' — country auto-detected from comma" />
+            <Input label="Place / Location *" name="place" value={formData.place} onChange={handleChange} required helperText="Format: 'City, Country' — country auto-detected from comma" sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <Input label="Country" name="country" value={formData.country} onChange={handleChange} helperText="Optional — auto-detected from Place" />
+            <Input label="Country" name="country" value={formData.country} onChange={handleChange} helperText="Optional — auto-detected from Place" sx={fieldSx} />
           </Grid>
 
           <Grid item xs={12} sm={4}>
-            <Input label="Latitude *" name="latitude" type="number" inputProps={{ step: 'any', min: -90, max: 90 }} value={formData.latitude} onChange={handleChange} required />
+            <Input label="Latitude *" name="latitude" type="number" inputProps={{ step: 'any', min: -90, max: 90 }} value={formData.latitude} onChange={handleChange} required sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="Longitude *" name="longitude" type="number" inputProps={{ step: 'any', min: -180, max: 180 }} value={formData.longitude} onChange={handleChange} required />
+            <Input label="Longitude *" name="longitude" type="number" inputProps={{ step: 'any', min: -180, max: 180 }} value={formData.longitude} onChange={handleChange} required sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="Depth (km) *" name="depth" type="number" inputProps={{ step: 'any', min: 0 }} value={formData.depth} onChange={handleChange} required />
+            <Input label="Depth (km) *" name="depth" type="number" inputProps={{ step: 'any', min: 0 }} value={formData.depth} onChange={handleChange} required sx={fieldSx} />
           </Grid>
 
           <Grid item xs={12} sm={4}>
-            <Input label="Magnitude *" name="mag" type="number" inputProps={{ step: '0.1', min: 0, max: 10 }} value={formData.mag} onChange={handleChange} required />
+            <Input label="Magnitude *" name="mag" type="number" inputProps={{ step: '0.1', min: 0, max: 10 }} value={formData.mag} onChange={handleChange} required sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Select label="Mag Type" name="magType" value={formData.magType} onChange={handleChange} options={MAGNITUDE_TYPES} />
+            <Select label="Mag Type" name="magType" value={formData.magType} onChange={handleChange} options={MAGNITUDE_TYPES} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Select label="Type" name="type" value={formData.type} onChange={handleChange} options={TYPE_OPTIONS} />
+            <Select label="Type" name="type" value={formData.type} onChange={handleChange} options={TYPE_OPTIONS} sx={fieldSx} />
           </Grid>
 
           {/* Optional Fields Section */}
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <SettingsIcon sx={{ color: 'text.secondary', fontSize: 18 }} />
-              <Typography variant="subtitle2" color="text.secondary" fontWeight="700" sx={{ letterSpacing: '0.02em' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, mb: 0.5 }}>
+              <Box
+                sx={{
+                  p: 0.8, borderRadius: '10px',
+                  background: isDark ? '#1a233b' : '#e6f0ff',
+                  color: '#3b82f6',
+                  border: '1.5px solid #3b82f6',
+                  display: 'flex', alignItems: 'center',
+                }}
+              >
+                <SettingsIcon sx={{ fontSize: 16 }} />
+              </Box>
+              <Typography sx={{ fontFamily: '"Fredoka", sans-serif', fontWeight: 800, fontSize: '0.9rem', color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
                 Optional Technical Metadata
               </Typography>
             </Box>
           </Grid>
 
           <Grid item xs={12} sm={4}>
-            <Input label="Network (net)" name="net" value={formData.net} onChange={handleChange} />
+            <Input label="Network (net)" name="net" value={formData.net} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Select label="Status" name="status" value={formData.status} onChange={handleChange} options={STATUS_OPTIONS} />
+            <Select label="Status" name="status" value={formData.status} onChange={handleChange} options={STATUS_OPTIONS} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="Gap" name="gap" type="number" inputProps={{ step: 'any' }} value={formData.gap} onChange={handleChange} />
+            <Input label="Gap" name="gap" type="number" inputProps={{ step: 'any' }} value={formData.gap} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="RMS" name="rms" type="number" inputProps={{ step: 'any' }} value={formData.rms} onChange={handleChange} />
+            <Input label="RMS" name="rms" type="number" inputProps={{ step: 'any' }} value={formData.rms} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="Mag Error" name="magError" type="number" inputProps={{ step: 'any' }} value={formData.magError} onChange={handleChange} />
+            <Input label="Mag Error" name="magError" type="number" inputProps={{ step: 'any' }} value={formData.magError} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="NST" name="nst" value={formData.nst} onChange={handleChange} />
+            <Input label="NST" name="nst" value={formData.nst} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="Dmin" name="dmin" type="number" inputProps={{ step: 'any' }} value={formData.dmin} onChange={handleChange} />
+            <Input label="Dmin" name="dmin" type="number" inputProps={{ step: 'any' }} value={formData.dmin} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="Horizontal Error" name="horizontalError" type="number" inputProps={{ step: 'any' }} value={formData.horizontalError} onChange={handleChange} />
+            <Input label="Horizontal Error" name="horizontalError" type="number" inputProps={{ step: 'any' }} value={formData.horizontalError} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Input label="Depth Error" name="depthError" type="number" inputProps={{ step: 'any' }} value={formData.depthError} onChange={handleChange} />
+            <Input label="Depth Error" name="depthError" type="number" inputProps={{ step: 'any' }} value={formData.depthError} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Input label="Location Source" name="locationSource" value={formData.locationSource} onChange={handleChange} />
+            <Input label="Location Source" name="locationSource" value={formData.locationSource} onChange={handleChange} sx={fieldSx} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Input label="Mag Source" name="magSource" value={formData.magSource} onChange={handleChange} />
+            <Input label="Mag Source" name="magSource" value={formData.magSource} onChange={handleChange} sx={fieldSx} />
           </Grid>
 
           <Grid item xs={12}>
-            <Divider sx={{ my: 1.5, borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }} />
+            <Divider sx={{ my: 1.5, borderColor: isDark ? '#ffffff' : '#0f172a', borderWidth: '1.5px' }} />
           </Grid>
 
           <Grid item xs={12}>
@@ -226,24 +252,30 @@ const EarthquakeForm = ({ initialData, onSubmit, loading }) => {
                 size="large"
                 disabled={loading}
                 sx={{
-                  borderRadius: 3,
+                  borderRadius: '14px',
                   px: 5,
-                  py: 1.2,
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
+                  py: 1.5,
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
+                  fontFamily: '"Fredoka", sans-serif',
                   textTransform: 'none',
-                  background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
-                  boxShadow: '0 4px 16px rgba(239,68,68,0.25)',
+                  background: '#ff5e7e',
+                  color: '#ffffff',
+                  border: isDark ? '2.5px solid #ffffff' : '2.5px solid #0f172a',
+                  boxShadow: isDark ? '4px 4px 0px 0px #ffffff' : '4px 4px 0px 0px #0f172a',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #dc2626 0%, #ea580c 100%)',
-                    transform: 'translateY(-1px)',
-                    boxShadow: '0 6px 20px rgba(239,68,68,0.35)',
+                    background: '#e03f60',
+                    transform: 'translate(-2px, -2px)',
+                    boxShadow: isDark ? '6px 6px 0px 0px #ffffff' : '6px 6px 0px 0px #0f172a',
                   },
                   '&.Mui-disabled': {
-                    background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-                    color: isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+                    background: isDark ? '#1f253d' : '#e2e8f0',
+                    color: isDark ? '#475569' : '#94a3b8',
+                    borderColor: isDark ? '#334155' : '#cbd5e1',
+                    boxShadow: 'none',
+                    transform: 'none',
                   },
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 {loading ? 'Saving...' : initialData ? 'Update Event' : 'Register Event'}
