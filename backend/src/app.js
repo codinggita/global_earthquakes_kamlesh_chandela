@@ -12,6 +12,9 @@ const v1Routes = require('./routes/index');
 
 const app = express();
 
+// Trust reverse proxy (Render, AWS, Heroku, Nginx)
+app.set('trust proxy', 1);
+
 connectDB();
 
 app.use(helmet());

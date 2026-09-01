@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Earthquake = require('../models/Earthquake.model');
 
 class EarthquakeService {
@@ -12,7 +13,7 @@ class EarthquakeService {
       data, total,
       pagination: {
         page, limit, total,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.max(1, Math.ceil(total / limit)),
         hasNext: page < Math.ceil(total / limit),
         hasPrev: page > 1
       }
@@ -20,7 +21,11 @@ class EarthquakeService {
   }
 
   static async getEarthquakeById(id) {
-    return await Earthquake.findById(id);
+    if (mongoose.isValidObjectId(id)) {
+      const eq = await Earthquake.findById(id);
+      if (eq) return eq;
+    }
+    return await Earthquake.findOne({ id: id });
   }
 
   static async getEarthquakeByUsgsId(usgsId) {
@@ -32,15 +37,27 @@ class EarthquakeService {
   }
 
   static async updateEarthquake(id, data) {
-    return await Earthquake.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    if (mongoose.isValidObjectId(id)) {
+      const eq = await Earthquake.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+      if (eq) return eq;
+    }
+    return await Earthquake.findOneAndUpdate({ id: id }, data, { new: true, runValidators: true });
   }
 
   static async deleteEarthquake(id) {
-    return await Earthquake.findByIdAndDelete(id);
+    if (mongoose.isValidObjectId(id)) {
+      const eq = await Earthquake.findByIdAndDelete(id);
+      if (eq) return eq;
+    }
+    return await Earthquake.findOneAndDelete({ id: id });
   }
 
   static async checkExists(id) {
-    return await Earthquake.exists({ _id: id });
+    if (mongoose.isValidObjectId(id)) {
+      const exists = await Earthquake.exists({ _id: id });
+      if (exists) return exists;
+    }
+    return await Earthquake.exists({ id: id });
   }
 
   static async bulkCreate(earthquakes) {
